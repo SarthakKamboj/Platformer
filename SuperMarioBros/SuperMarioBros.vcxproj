@@ -137,11 +137,14 @@
     <ClCompile Include="src\constants.h" />
     <ClCompile Include="src\glad\glad.c" />
     <ClCompile Include="src\init.cpp" />
+    <ClCompile Include="src\input.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\stb\stb.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\init.h" />
+    <ClInclude Include="src\input.h" />
+    <ClInclude Include="src\states.h" />
     <ClInclude Include="src\stb\stb_image.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -10,6 +10,8 @@ current things to do
     - powerful star
     - castle
 
+- create prototype with basic rectangles and stuff
+
 overall things to do
 ------------------
 1. find proper spritesheets (may need to make tool to standardize spritesheets)

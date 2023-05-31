@@ -1,18 +1,17 @@
-#include "SDL.h"
 #include <string>
 #include <stdexcept>
 #include <iostream>
 #include "glad/glad.h"
 #include "constants.h"
+#include "init.h"
+#include "SDL.h"
 
-void init() {
+SDL_Window* init_sdl() {
 	if (SDL_Init(SDL_INIT_EVERYTHING) != 0) {
 		const char* sdl_error = SDL_GetError();
 		std::string error_msg = "SDL could not be initialized: " + std::string(sdl_error);
 		throw std::runtime_error(error_msg);
 	}
-
-	std::cout << "SDL loaded properly" << std::endl;
 
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 1);
@@ -41,4 +40,11 @@ void init() {
 
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+	return window;
+}
+
+void init(application_state_t& application_state) {
+	application_state.window = init_sdl();
+	application_state.running = true;
 }
