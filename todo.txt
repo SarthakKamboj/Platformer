@@ -1,0 +1,41 @@
+current things to do
+------------------
+- find spritesheet for 
+    - mario
+    - question box
+    - brick
+    - ground block
+    - pipe
+    - get big mushroom
+    - powerful star
+    - castle
+
+overall things to do
+------------------
+1. find proper spritesheets (may need to make tool to standardize spritesheets)
+- render mario + goomba + koopa troopas
+- render background in layers
+- add animations for these characters
+- add aabb physics
+- add audio
+- maybe need to create separate tool for level design
+- add more flushed out UI system
+- add particle effects for breaking stuff
+
+required systems
+---------------
+- rendering
+- animation
+- physics
+- audio
+- possibly level design tool
+- scene manager is multiple levels are made 
+- UI (research best strategy here and if a HTML/CSS template would be useful, make sure it works best for the game)
+- visual effects/particle system
+
+extra stuff
+--------
+- pipes that lead to different parts of the level
+- boss fight
+- luigi
+- luigi but with networked multiplayer??
