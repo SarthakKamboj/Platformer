@@ -134,7 +134,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="app.cpp" />
+    <ClCompile Include="src\app.cpp" />
     <ClCompile Include="src\gameobjects\basic\shape_gos.cpp" />
     <ClCompile Include="src\renderer\basic\shape_renders.cpp" />
     <ClCompile Include="src\constants.h" />
