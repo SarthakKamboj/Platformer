@@ -29,3 +29,13 @@ void update_main_character(const main_character_t& mc, key_state_t& key_state, f
 		transform.position += glm::vec3(glm::normalize(delta_pos_vec), 0.f);
 	}
 }
+
+const glm::vec3 ground_block_t::BLOCK_COLOR = glm::vec3(0.58f, 0.29f, 0.f);
+
+ground_block_t create_ground_block(const glm::vec3& pos, const glm::vec3& scale, float rot) {
+	ground_block_t block;
+	block.transform_handle = create_transform(pos, scale, rot);
+	glm::vec3 color = ground_block_t::BLOCK_COLOR;
+	block.rec_render_handle = create_rectangle_render(block.transform_handle, color, ground_block_t::WIDTH, ground_block_t::HEIGHT);
+	return block;
+}

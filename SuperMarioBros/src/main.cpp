@@ -21,6 +21,11 @@ int main(int argc, char** argv) {
 
 	glm::vec3 rec_color = glm::vec3(0, 1, 1);
 	main_character_t mc = create_main_character(glm::vec3(SCREEN_WIDTH/2, SCREEN_HEIGHT/2, 0.f), glm::vec3(1.f), 0.f, rec_color, glm::vec2(50, 100));
+	const int NUM_BLOCKS = 15;
+	ground_block_t blocks[NUM_BLOCKS];
+	for (int i = 0; i < NUM_BLOCKS; i++) {
+		blocks[i] = create_ground_block(glm::vec3((ground_block_t::WIDTH / 2) + ground_block_t::WIDTH * i, 20, 0.f), glm::vec3(1.f), 0.f);
+	}
 
 	float delta_time = 0.f;
 
