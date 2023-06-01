@@ -23,5 +23,6 @@ void draw_rectangle_render(const rectangle_render_t& rectangle) {
 	cur_transform.scale *= rectangle._internal_transform.scale;
 	glm::mat4 model_matrix = get_model_matrix(cur_transform);
 	shader_set_mat4(rectangle_render_t::obj_data.shader, "model", model_matrix);
+	shader_set_vec3(rectangle_render_t::obj_data.shader, "rec_color", rectangle.color);
 	draw_obj(rectangle_render_t::obj_data);
 }

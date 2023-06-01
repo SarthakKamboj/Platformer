@@ -2,7 +2,7 @@
 
 #include "SDL.h"
 #include <map>
-#include "gameobjects/basic/shape_gos.h"
+#include "gameobjects/gos.h"
 #include "input/input.h"
 
 struct application_t {
@@ -11,4 +11,4 @@ struct application_t {
 };
 
 void init(application_t& app);
-void update(key_state_t& key_state, float delta_time, const rectangle_t& rectangle);
+void update(key_state_t& key_state, float delta_time, const main_character_t& mc);

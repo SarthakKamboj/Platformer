@@ -1,14 +1,14 @@
-#include "shape_gos.h"
+#include "gos.h"
 #include "constants.h" 
 
-rectangle_t create_rectangle(const glm::vec3& pos, const glm::vec3& scale, float rot, glm::vec3& color, const glm::vec2& dims) {
-	rectangle_t rectangle;
-	rectangle.transform_handle = create_transform(pos, scale, rot);
-	rectangle.rec_render_handle = create_rectangle_render(rectangle.transform_handle, color, dims.x, dims.y);
-	return rectangle;
+main_character_t create_main_character(const glm::vec3& pos, const glm::vec3& scale, float rot, glm::vec3& color, const glm::vec2& dims) {
+	main_character_t mc;
+	mc.transform_handle = create_transform(pos, scale, rot);
+	mc.rec_render_handle = create_rectangle_render(mc.transform_handle, color, dims.x, dims.y);
+	return mc;
 }
 
-void update_rectangle(const rectangle_t& rectangle, key_state_t& key_state, float delta_time) {
+void update_main_character(const main_character_t& mc, key_state_t& key_state, float delta_time) {
 	const float vel = SCREEN_WIDTH / 4.f;
 	const float delta_pos = vel * delta_time;
 	glm::vec2 delta_pos_vec(0.f, 0.f);
@@ -25,7 +25,7 @@ void update_rectangle(const rectangle_t& rectangle, key_state_t& key_state, floa
 	}
 
 	if (delta_pos_vec != glm::vec2(0.f, 0.f)) {
-		transform_t& transform = *get_transform(rectangle.transform_handle);
+		transform_t& transform = *get_transform(mc.transform_handle);
 		transform.position += glm::vec3(glm::normalize(delta_pos_vec), 0.f);
 	}
 }

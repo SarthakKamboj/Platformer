@@ -135,7 +135,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\app.cpp" />
-    <ClCompile Include="src\gameobjects\basic\shape_gos.cpp" />
+    <ClCompile Include="src\gameobjects\gos.cpp" />
     <ClCompile Include="src\renderer\basic\shape_renders.cpp" />
     <ClCompile Include="src\constants.h" />
     <ClCompile Include="src\glad\glad.c" />
@@ -153,7 +153,7 @@
     <ClCompile Include="src\transform\transform.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\gameobjects\basic\shape_gos.h" />
+    <ClInclude Include="src\gameobjects\gos.h" />
     <ClInclude Include="src\renderer\basic\shape_renders.h" />
     <ClInclude Include="src\helper\io.h" />
     <ClInclude Include="src\helper\conversion.h" />

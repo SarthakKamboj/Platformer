@@ -6,7 +6,7 @@
 #include "constants.h"
 #include "renderer/opengl/object_data.h"
 #include "renderer/renderer.h"
-#include "gameobjects/basic/shape_gos.h"
+#include "gameobjects/gos.h"
 
 /*
 Screen coordinates will always being (0,0) in the bottom left and (SCREEN_WIDTH, SCREEN_HEIGHT) in top right
@@ -19,9 +19,8 @@ int main(int argc, char** argv) {
 
 	init(app);
 
-	// int transform_idx = create_transform(glm::vec3(SCREEN_WIDTH/2, SCREEN_HEIGHT/2, 0.f), glm::vec3(1.f), 0.f);
 	glm::vec3 rec_color = glm::vec3(0, 1, 1);
-	rectangle_t rectangle = create_rectangle(glm::vec3(SCREEN_WIDTH/2, SCREEN_HEIGHT/2, 0.f), glm::vec3(1.f), 0.f, rec_color, glm::vec2(50, 100));
+	main_character_t mc = create_main_character(glm::vec3(SCREEN_WIDTH/2, SCREEN_HEIGHT/2, 0.f), glm::vec3(1.f), 0.f, rec_color, glm::vec2(50, 100));
 
 	float delta_time = 0.f;
 
@@ -31,7 +30,7 @@ int main(int argc, char** argv) {
 		if (key_state.close_event_pressed) {
 			app.running = false;
 		}
-		update(key_state, delta_time, rectangle);
+		update(key_state, delta_time, mc);
 		render(app);
 		Uint32 end = SDL_GetTicks();
 		delta_time = (end - start) / 1000.f;
