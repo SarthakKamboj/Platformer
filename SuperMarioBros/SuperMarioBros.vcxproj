@@ -105,7 +105,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Sarthak\projects\libraries\glm;C:\Sarthak\projects\libraries\imgui-docking\imgui-docking;C:\Sarthak\projects\libraries\glad\include;C:\Sarthak\projects\libraries\SDL2\include;C:\Sarthak\projects\libraries\ft2130\freetype-2.13.0\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Sarthak\projects\libraries\glm;C:\Sarthak\projects\libraries\imgui-docking\imgui-docking;C:\Sarthak\projects\libraries\glad\include;C:\Sarthak\projects\libraries\SDL2\include;C:\Sarthak\projects\libraries\ft2130\freetype-2.13.0\include;$(ProjectDir)src</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -122,7 +122,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Sarthak\projects\libraries\glm;C:\Sarthak\projects\libraries\imgui-docking\imgui-docking;C:\Sarthak\projects\libraries\glad\include;C:\Sarthak\projects\libraries\SDL2\include;C:\Sarthak\projects\libraries\ft2130\freetype-2.13.0\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Sarthak\projects\libraries\glm;C:\Sarthak\projects\libraries\imgui-docking\imgui-docking;C:\Sarthak\projects\libraries\glad\include;C:\Sarthak\projects\libraries\SDL2\include;C:\Sarthak\projects\libraries\ft2130\freetype-2.13.0\include;$(ProjectDir)src</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -134,18 +134,38 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\gameobjects\basic\shape_gos.cpp" />
+    <ClCompile Include="src\renderer\basic\shape_renders.cpp" />
     <ClCompile Include="src\constants.h" />
     <ClCompile Include="src\glad\glad.c" />
+    <ClCompile Include="src\helper\conversion.cpp" />
+    <ClCompile Include="src\helper\io.cpp" />
     <ClCompile Include="src\init.cpp" />
-    <ClCompile Include="src\input.cpp" />
+    <ClCompile Include="src\input\input.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\renderer\opengl\buffers.cpp" />
+    <ClCompile Include="src\renderer\opengl\object_data.cpp" />
+    <ClCompile Include="src\renderer\opengl\resources.cpp" />
+    <ClCompile Include="src\renderer\opengl\vertex.cpp" />
+    <ClCompile Include="src\renderer\renderer.cpp" />
     <ClCompile Include="src\stb\stb.cpp" />
+    <ClCompile Include="src\transform\transform.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\gameobjects\basic\shape_gos.h" />
+    <ClInclude Include="src\renderer\basic\shape_renders.h" />
+    <ClInclude Include="src\helper\io.h" />
+    <ClInclude Include="src\helper\conversion.h" />
     <ClInclude Include="src\init.h" />
-    <ClInclude Include="src\input.h" />
+    <ClInclude Include="src\input\input.h" />
+    <ClInclude Include="src\renderer\opengl\buffers.h" />
+    <ClInclude Include="src\renderer\opengl\object_data.h" />
+    <ClInclude Include="src\renderer\opengl\resources.h" />
+    <ClInclude Include="src\renderer\opengl\vertex.h" />
+    <ClInclude Include="src\renderer\renderer.h" />
     <ClInclude Include="src\states.h" />
     <ClInclude Include="src\stb\stb_image.h" />
+    <ClInclude Include="src\transform\transform.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

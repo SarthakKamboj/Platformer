@@ -1,0 +1,2 @@
+- since this is a 2d game, things will be rendered with regards to screen pixels
+- distance system will be 1 pixel = 1 meter or something
