@@ -157,7 +157,6 @@
     <ClInclude Include="src\renderer\basic\shape_renders.h" />
     <ClInclude Include="src\helper\io.h" />
     <ClInclude Include="src\helper\conversion.h" />
-    <ClInclude Include="src\init.h" />
     <ClInclude Include="src\input\input.h" />
     <ClInclude Include="src\renderer\opengl\buffers.h" />
     <ClInclude Include="src\renderer\opengl\object_data.h" />

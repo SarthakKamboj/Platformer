@@ -1,24 +1,25 @@
 #include "input.h"
 #include "constants.h"
 
-void process_input(application_t& app, mouse_state_t& mouse_state, key_state_t& key_state) {
+void process_input(mouse_state_t& mouse_state, key_state_t& key_state, SDL_Window* window) {
 	SDL_Event event;
 	mouse_state.left_mouse_down = false;
 	mouse_state.left_mouse_up = false;
 	mouse_state.right_mouse_down = false;
 	mouse_state.right_mouse_up = false;
 
+	key_state.close_event_pressed = false;
 	key_state.key_down.clear();
 	key_state.key_up.clear();
 
 	while (SDL_PollEvent(&event)) {
-		if (event.type == SDL_WINDOWEVENT && event.window.event == SDL_WINDOWEVENT_CLOSE && event.window.windowID == SDL_GetWindowID(app.window)) {
-			app.running = false;
-			return;
+		if (event.type == SDL_WINDOWEVENT && event.window.event == SDL_WINDOWEVENT_CLOSE && event.window.windowID == SDL_GetWindowID(window)) {
+			key_state.close_event_pressed = true;
+			continue;
 		}
 		switch (event.type) {
 		case SDL_QUIT: {
-			app.running = false;
+			key_state.close_event_pressed = true;
 		}
 					 break;
 		case SDL_MOUSEBUTTONUP: {
@@ -103,8 +104,8 @@ void process_input(application_t& app, mouse_state_t& mouse_state, key_state_t& 
 				break;
 			}
 			case SDLK_ESCAPE: {
-				app.running = false;
-				return;
+				key_state.close_event_pressed = true;
+				break;
 			}
 			default:
 				break;

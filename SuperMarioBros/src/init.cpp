@@ -3,7 +3,7 @@
 #include <iostream>
 #include "glad/glad.h"
 #include "constants.h"
-#include "init.h"
+#include "app.h"
 #include "SDL.h"
 #include "renderer/opengl/buffers.h"
 #include "renderer/opengl/resources.h"

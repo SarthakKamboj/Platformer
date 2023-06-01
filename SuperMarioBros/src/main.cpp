@@ -1,4 +1,3 @@
-#include "init.h"
 #include "input/input.h"
 #include "SDL.h"
 #include "glad/glad.h"
@@ -12,9 +11,6 @@
 /*
 Screen coordinates will always being (0,0) in the bottom left and (SCREEN_WIDTH, SCREEN_HEIGHT) in top right
 */
-void update(key_state_t& key_state, float delta_time, const rectangle_t& rectangle) {
-	update_rectangle(rectangle, key_state, delta_time);
-}
 
 int main(int argc, char** argv) {
 	application_t app;
@@ -31,7 +27,10 @@ int main(int argc, char** argv) {
 
 	while (app.running) {
 		Uint32 start = SDL_GetTicks();
-		process_input(app, mouse_state, key_state);	
+		process_input(mouse_state, key_state, app.window);	
+		if (key_state.close_event_pressed) {
+			app.running = false;
+		}
 		update(key_state, delta_time, rectangle);
 		render(app);
 		Uint32 end = SDL_GetTicks();

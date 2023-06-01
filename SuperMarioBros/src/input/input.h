@@ -1,11 +1,13 @@
 #pragma once
 
-#include "app.h"
+#include <map>
+#include "SDL.h"
 
 struct key_state_t {
 	std::map<unsigned char, bool> key_down;
 	std::map<unsigned char, bool> key_up;
 	std::map<unsigned char, bool> key_being_pressed;
+	bool close_event_pressed = false;
 };
 
 struct mouse_state_t {
@@ -14,4 +16,4 @@ struct mouse_state_t {
 	bool right_mouse_down = false, right_mouse_up = false, right_mouse_being_pressed = false;
 };
 
-void process_input(application_t& app_state, mouse_state_t& mouse_state, key_state_t& key_state);
+void process_input(mouse_state_t& mouse_state, key_state_t& key_state, SDL_Window* window);
