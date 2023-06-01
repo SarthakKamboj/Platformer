@@ -81,8 +81,8 @@ void init_rectangle_data() {
 	shader_set_mat4(data.shader, "projection", projection);
 }
 
-void init(application_state_t& application_state) {
-	application_state.window = init_sdl();
-	application_state.running = true;
+void init(application_t& app) {
+	app.window = init_sdl();
+	app.running = true;
 	init_rectangle_data();
 }

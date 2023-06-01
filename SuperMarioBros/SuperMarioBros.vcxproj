@@ -134,6 +134,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="app.cpp" />
     <ClCompile Include="src\gameobjects\basic\shape_gos.cpp" />
     <ClCompile Include="src\renderer\basic\shape_renders.cpp" />
     <ClCompile Include="src\constants.h" />
@@ -163,7 +164,7 @@
     <ClInclude Include="src\renderer\opengl\resources.h" />
     <ClInclude Include="src\renderer\opengl\vertex.h" />
     <ClInclude Include="src\renderer\renderer.h" />
-    <ClInclude Include="src\states.h" />
+    <ClInclude Include="src\app.h" />
     <ClInclude Include="src\stb\stb_image.h" />
     <ClInclude Include="src\transform\transform.h" />
   </ItemGroup>

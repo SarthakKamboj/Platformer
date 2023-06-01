@@ -8,7 +8,7 @@ rectangle_t create_rectangle(const glm::vec3& pos, const glm::vec3& scale, float
 	return rectangle;
 }
 
-void update_rectangle(const rectangle_t& rectangle, input::key_state_t& key_state, float delta_time) {
+void update_rectangle(const rectangle_t& rectangle, key_state_t& key_state, float delta_time) {
 	const float vel = SCREEN_WIDTH / 4.f;
 	const float delta_pos = vel * delta_time;
 	glm::vec2 delta_pos_vec(0.f, 0.f);

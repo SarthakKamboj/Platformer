@@ -2,7 +2,7 @@
 #include "input/input.h"
 #include "SDL.h"
 #include "glad/glad.h"
-#include "states.h"
+#include "app.h"
 #include <iostream>
 #include "constants.h"
 #include "renderer/opengl/object_data.h"
@@ -12,17 +12,16 @@
 /*
 Screen coordinates will always being (0,0) in the bottom left and (SCREEN_WIDTH, SCREEN_HEIGHT) in top right
 */
-
-void update(input::key_state_t& key_state, float delta_time, const rectangle_t& rectangle) {
+void update(key_state_t& key_state, float delta_time, const rectangle_t& rectangle) {
 	update_rectangle(rectangle, key_state, delta_time);
 }
 
 int main(int argc, char** argv) {
-	application_state_t app_state;
-	input::mouse_state_t mouse_state;
-	input::key_state_t key_state;
+	application_t app;
+	mouse_state_t mouse_state;
+	key_state_t key_state;
 
-	init(app_state);
+	init(app);
 
 	// int transform_idx = create_transform(glm::vec3(SCREEN_WIDTH/2, SCREEN_HEIGHT/2, 0.f), glm::vec3(1.f), 0.f);
 	glm::vec3 rec_color = glm::vec3(0, 1, 1);
@@ -30,11 +29,11 @@ int main(int argc, char** argv) {
 
 	float delta_time = 0.f;
 
-	while (app_state.running) {
+	while (app.running) {
 		Uint32 start = SDL_GetTicks();
-		input::process_input(app_state, mouse_state, key_state);	
+		process_input(app, mouse_state, key_state);	
 		update(key_state, delta_time, rectangle);
-		render(app_state);
+		render(app);
 		Uint32 end = SDL_GetTicks();
 		delta_time = (end - start) / 1000.f;
 	}
