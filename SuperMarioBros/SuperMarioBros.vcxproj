@@ -136,6 +136,7 @@
   <ItemGroup>
     <ClCompile Include="src\app.cpp" />
     <ClCompile Include="src\gameobjects\gos.cpp" />
+    <ClCompile Include="src\physics\physics.cpp" />
     <ClCompile Include="src\renderer\basic\shape_renders.cpp" />
     <ClCompile Include="src\constants.h" />
     <ClCompile Include="src\glad\glad.c" />
@@ -154,6 +155,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\gameobjects\gos.h" />
+    <ClInclude Include="src\physics\physics.h" />
     <ClInclude Include="src\renderer\basic\shape_renders.h" />
     <ClInclude Include="src\helper\io.h" />
     <ClInclude Include="src\helper\conversion.h" />

@@ -10,7 +10,9 @@ current things to do
     - powerful star
     - castle
 
-- create prototype with basic rectangles and stuff
+- create prototype with basic rectangles and stuff (done)
+- add physics components and col detection
+
 - make types for mario and ground and do basic movement, physics, and col detection
     - possibly construct these out of smaller building blocks and keep track of indicies, also allows for separating systems easier
         1. sprite renderer 

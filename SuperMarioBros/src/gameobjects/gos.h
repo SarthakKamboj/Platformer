@@ -3,12 +3,14 @@
 #include "renderer/basic/shape_renders.h"
 #include "transform/transform.h"
 #include "input/input.h"
+#include "physics/physics.h"
 
 struct main_character_t {
 	// create transform first
 	int transform_handle = -1;
 	// character currently renders a rectangle, will later change to sprite
 	int rec_render_handle = -1;
+	int rigidbody_handle = -1;
 	glm::vec3 color;
 	glm::vec2 dims;
 };
@@ -21,6 +23,7 @@ struct ground_block_t {
 	int transform_handle = -1;
 	// block currently renders a rectangle, will later change to sprite
 	int rec_render_handle = -1;
+	int rigidbody_handle = -1;
 	glm::vec3 color;
 	static const int WIDTH = 40;
 	static const int HEIGHT = 40;

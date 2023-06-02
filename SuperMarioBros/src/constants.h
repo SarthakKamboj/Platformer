@@ -6,3 +6,4 @@
 #define SCREEN_HEIGHT 600
 #define RESOURCES_PATH std::string("C:\\Sarthak\\projects\\Platformer\\SuperMarioBros\\resources")
 #define SHADERS_PATH (RESOURCES_PATH + std::string("\\shaders"))
+#define GRAVITY (9.8f * 100.f)
