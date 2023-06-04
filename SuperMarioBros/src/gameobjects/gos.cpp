@@ -1,33 +1,33 @@
 #include "gos.h"
 #include "constants.h" 
+#include <iostream>
 
 main_character_t create_main_character(const glm::vec3& pos, const glm::vec3& scale, float rot, glm::vec3& color, const glm::vec2& dims) {
 	main_character_t mc;
 	mc.transform_handle = create_transform(pos, scale, rot);
 	mc.rec_render_handle = create_rectangle_render(mc.transform_handle, color, dims.x, dims.y, false);
-	mc.rigidbody_handle = create_rigidbody(mc.transform_handle, true, dims.x, dims.y);
+	mc.rigidbody_handle = create_rigidbody(mc.transform_handle, true, dims.x, dims.y, false);
+	get_rigidbody(mc.rigidbody_handle)->debug = true;
 	return mc;
 }
 
 void update_main_character(const main_character_t& mc, key_state_t& key_state, float delta_time) {
 	const float vel = SCREEN_WIDTH / 4.f;
-	const float delta_pos = vel * delta_time;
+	// const float delta_pos = vel * delta_time;
 	glm::vec2 delta_pos_vec(0.f, 0.f);
-	if (key_state.key_being_pressed['w']) {
-		delta_pos_vec.y = delta_pos;
-	} else if (key_state.key_being_pressed['s']) {
-		delta_pos_vec.y = -delta_pos;
-	} 
-	if (key_state.key_being_pressed['a']) {
-		delta_pos_vec.x = -delta_pos;
-	} 
-	else if (key_state.key_being_pressed['d']) {
-		delta_pos_vec.x = delta_pos;
+	rigidbody_t& rb = *get_rigidbody(mc.rigidbody_handle);
+	if (key_state.key_being_pressed['w'] || key_state.key_being_pressed[' ']) {
+		rb.cur_y_vel = 2*vel;
 	}
 
-	if (delta_pos_vec != glm::vec2(0.f, 0.f)) {
-		transform_t& transform = *get_transform(mc.transform_handle);
-		transform.position += glm::vec3(glm::normalize(delta_pos_vec), 0.f);
+	if (key_state.key_being_pressed['a']) {
+		rb.cur_x_vel = -vel;
+	}
+	else if (key_state.key_being_pressed['d']) {
+		rb.cur_x_vel = vel;
+	}
+	else {
+		rb.cur_x_vel = 0;
 	}
 }
 
@@ -38,6 +38,6 @@ ground_block_t create_ground_block(const glm::vec3& pos, const glm::vec3& scale,
 	block.transform_handle = create_transform(pos, scale, rot);
 	glm::vec3 color = ground_block_t::BLOCK_COLOR;
 	block.rec_render_handle = create_rectangle_render(block.transform_handle, color, ground_block_t::WIDTH, ground_block_t::HEIGHT, false);
-	block.rigidbody_handle = create_rigidbody(block.transform_handle, false, ground_block_t::WIDTH, ground_block_t::HEIGHT);
+	block.rigidbody_handle = create_rigidbody(block.transform_handle, false, ground_block_t::WIDTH, ground_block_t::HEIGHT, true);
 	return block;
 }

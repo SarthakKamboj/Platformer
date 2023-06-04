@@ -16,8 +16,23 @@ struct rigidbody_t {
 	aabb_collider_t aabb_collider;
 	int transform_handle = -1;
 	float cur_y_vel = 0.f;
+	float cur_x_vel = 0.f;
 	bool use_gravity = false;
+	bool is_kinematic = false;
+	bool debug = false;
 };
 
-int create_rigidbody(int transform_handle, bool use_gravity, float collider_width, float collider_height);
+enum PHYSICS_COLLISION_DIR {
+	NONE,
+	VERTICAL,
+	HORIZONTAL,
+};
+
+struct collision_info_t {
+	bool is_colliding = false;
+	PHYSICS_COLLISION_DIR dir = PHYSICS_COLLISION_DIR::NONE;
+};
+
+int create_rigidbody(int transform_handle, bool use_gravity, float collider_width, float collider_height, bool is_kinematic);
 void update_rigidbodies(float delta_time);
+rigidbody_t* get_rigidbody(int rb_handle);
