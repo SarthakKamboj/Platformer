@@ -7,13 +7,11 @@ main_character_t create_main_character(const glm::vec3& pos, const glm::vec3& sc
 	mc.transform_handle = create_transform(pos, scale, rot);
 	mc.rec_render_handle = create_rectangle_render(mc.transform_handle, color, dims.x, dims.y, false);
 	mc.rigidbody_handle = create_rigidbody(mc.transform_handle, true, dims.x, dims.y, false);
-	get_rigidbody(mc.rigidbody_handle)->debug = true;
 	return mc;
 }
 
-void update_main_character(const main_character_t& mc, key_state_t& key_state, float delta_time) {
+void update_main_character(const main_character_t& mc, key_state_t& key_state) {
 	const float vel = SCREEN_WIDTH / 4.f;
-	// const float delta_pos = vel * delta_time;
 	glm::vec2 delta_pos_vec(0.f, 0.f);
 	rigidbody_t& rb = *get_rigidbody(mc.rigidbody_handle);
 	if (key_state.key_being_pressed['w'] || key_state.key_being_pressed[' ']) {

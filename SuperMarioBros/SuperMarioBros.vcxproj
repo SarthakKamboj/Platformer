@@ -134,6 +134,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\animation\animation.cpp" />
     <ClCompile Include="src\app.cpp" />
     <ClCompile Include="src\gameobjects\gos.cpp" />
     <ClCompile Include="src\physics\physics.cpp" />
@@ -152,8 +153,10 @@
     <ClCompile Include="src\renderer\renderer.cpp" />
     <ClCompile Include="src\stb\stb.cpp" />
     <ClCompile Include="src\transform\transform.cpp" />
+    <ClCompile Include="src\utils\time.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\animation\animation.h" />
     <ClInclude Include="src\gameobjects\gos.h" />
     <ClInclude Include="src\physics\physics.h" />
     <ClInclude Include="src\renderer\basic\shape_renders.h" />
@@ -168,6 +171,7 @@
     <ClInclude Include="src\app.h" />
     <ClInclude Include="src\stb\stb_image.h" />
     <ClInclude Include="src\transform\transform.h" />
+    <ClInclude Include="src\utils\time.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -33,5 +33,5 @@ struct collision_info_t {
 };
 
 int create_rigidbody(int transform_handle, bool use_gravity, float collider_width, float collider_height, bool is_kinematic);
-void update_rigidbodies(float delta_time);
+void update_rigidbodies();
 rigidbody_t* get_rigidbody(int rb_handle);

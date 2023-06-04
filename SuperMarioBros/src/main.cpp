@@ -7,6 +7,8 @@
 #include "renderer/opengl/object_data.h"
 #include "renderer/renderer.h"
 #include "gameobjects/gos.h"
+#include "utils/time.h"
+#include "animation/animation.h"
 
 /*
 Screen coordinates will always being (0,0) in the bottom left and (SCREEN_WIDTH, SCREEN_HEIGHT) in top right
@@ -32,18 +34,25 @@ int main(int argc, char** argv) {
 	blocks[NUM_BLOCKS] = create_ground_block(glm::vec3(l_block_x, block_y, 0.f), glm::vec3(1.f), 0.f);
 	blocks[NUM_BLOCKS+1] = create_ground_block(glm::vec3(l_block_x + ground_block_t::WIDTH, block_y, 0.f), glm::vec3(1.f), 0.f);
 
-	float delta_time = 0.f;
+	transform_t& transform = *get_transform(blocks[NUM_BLOCKS].transform_handle);
+	int anim_handle = create_animation(&transform.position.y, block_y, block_y * 2, 3.f);
+	start_animation(anim_handle);
+
+	// float delta_time = 0.f;
 
 	while (app.running) {
-		Uint32 start = SDL_GetTicks();
+		// Uint32 start = SDL_GetTicks();
+		float start = platformer::get_time_since_start_in_sec();
 		process_input(mouse_state, key_state, app.window);	
 		if (key_state.close_event_pressed) {
 			app.running = false;
 		}
-		update(key_state, delta_time, mc);
+		update(key_state, mc);
 		render(app);
-		Uint32 end = SDL_GetTicks();
-		delta_time = (end - start) / 1000.f;
+		// Uint32 end = SDL_GetTicks();
+		float end = platformer::get_time_since_start_in_sec();
+		platformer::time_t::delta_time = end - start;
+		// delta_time = (end - start) / 1000.f;
 	}
 	return -1;
 }

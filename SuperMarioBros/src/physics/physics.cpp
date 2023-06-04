@@ -4,6 +4,7 @@
 #include "transform/transform.h"
 #include <iostream>
 #include "input/input.h"
+#include "utils/time.h"
 
 std::vector<rigidbody_t> rigidbodies;
 
@@ -145,12 +146,12 @@ void handle_collision(rigidbody_t& rb1, rigidbody_t& rb2) {
 	}
 }
 
-void update_rigidbodies(float delta_time) {	
+void update_rigidbodies() {	
 
 	for (rigidbody_t& rb : rigidbodies) {
 		transform_t& transform = *get_transform(rb.transform_handle);
 		if (rb.use_gravity) {
-			rb.vel.y -= GRAVITY * delta_time;
+			rb.vel.y -= GRAVITY * platformer::time_t::delta_time;
 		}
 	}
 
@@ -164,8 +165,8 @@ void update_rigidbodies(float delta_time) {
 
 	for (rigidbody_t& rb : rigidbodies) {
 		transform_t& transform = *get_transform(rb.transform_handle);
-		transform.position.y += rb.vel.y * delta_time;
-		transform.position.x += rb.vel.x * delta_time;
+		transform.position.y += rb.vel.y * platformer::time_t::delta_time;
+		transform.position.x += rb.vel.x * platformer::time_t::delta_time;
 		rb.aabb_collider.x = transform.position.x;
 		rb.aabb_collider.y = transform.position.y;
 
