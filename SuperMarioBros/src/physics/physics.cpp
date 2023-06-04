@@ -77,34 +77,34 @@ void handle_collision(rigidbody_t& rb1, rigidbody_t& rb2) {
 	// rb1 is on the right and rb2 is on the left
 	if (col_1_left == col_2_right) {
 		// don't allow rb2 to move right
-		if (rb2.cur_x_vel > 0) rb2.cur_x_vel = 0.f;
+		if (rb2.vel.x > 0) rb2.vel.x = 0.f;
 		// don't allow rb1 to move left
-		if (rb1.cur_x_vel < 0) rb1.cur_x_vel = 0.f;
+		if (rb1.vel.x < 0) rb1.vel.x = 0.f;
 		return;
 	}
 	// rb2 is on the right and rb1 is on the left
 	else if (col_2_left == col_1_right) {
 		// don't allow rb2 to move left
-		if (rb2.cur_x_vel < 0) rb2.cur_x_vel = 0.f;
+		if (rb2.vel.x < 0) rb2.vel.x = 0.f;
 		// don't allow rb1 to move right
-		if (rb1.cur_x_vel > 0) rb1.cur_x_vel = 0.f;
+		if (rb1.vel.x > 0) rb1.vel.x = 0.f;
 		return;
 	}
 
 	// rb2 on bottom and rb1 on top
 	if (col_2_top == col_1_bottom) {
 		// don't let rb2 go up
-		if (rb2.cur_y_vel > 0) rb2.cur_y_vel = 0.f;
+		if (rb2.vel.y > 0) rb2.vel.y = 0.f;
 		// don't let rb1 go down
-		if (rb1.cur_y_vel < 0) rb1.cur_y_vel = 0.f;
+		if (rb1.vel.y < 0) rb1.vel.y = 0.f;
 		return;
 	}
 	// rb1 on bottom and rb2 on top
 	else if (col_1_top == col_2_bottom) {
 		// don't let rb2 go down
-		if (rb2.cur_y_vel < 0) rb2.cur_y_vel = 0.f;
+		if (rb2.vel.y < 0) rb2.vel.y = 0.f;
 		// don't let rb1 go up
-		if (rb1.cur_y_vel > 0) rb1.cur_y_vel = 0.f;
+		if (rb1.vel.y > 0) rb1.vel.y = 0.f;
 		return;
 	}
 
@@ -124,12 +124,12 @@ void handle_collision(rigidbody_t& rb1, rigidbody_t& rb2) {
 	}
 
 	if (col_info.dir == VERTICAL) {
-		rb1.cur_y_vel = 0.f;
-		rb2.cur_y_vel = 0.f;
+		rb1.vel.y = 0.f;
+		rb2.vel.y = 0.f;
 	}
 	else {
-		rb1.cur_x_vel = 0.f;
-		rb2.cur_x_vel = 0.f;
+		rb1.vel.x = 0.f;
+		rb2.vel.x = 0.f;
 	}
 
 	transform_t& transform1 = *get_transform(rb1.transform_handle);
@@ -150,7 +150,7 @@ void update_rigidbodies(float delta_time) {
 	for (rigidbody_t& rb : rigidbodies) {
 		transform_t& transform = *get_transform(rb.transform_handle);
 		if (rb.use_gravity) {
-			rb.cur_y_vel -= GRAVITY * delta_time;
+			rb.vel.y -= GRAVITY * delta_time;
 		}
 	}
 
@@ -164,8 +164,8 @@ void update_rigidbodies(float delta_time) {
 
 	for (rigidbody_t& rb : rigidbodies) {
 		transform_t& transform = *get_transform(rb.transform_handle);
-		transform.position.y += rb.cur_y_vel * delta_time;
-		transform.position.x += rb.cur_x_vel * delta_time;
+		transform.position.y += rb.vel.y * delta_time;
+		transform.position.x += rb.vel.x * delta_time;
 		rb.aabb_collider.x = transform.position.x;
 		rb.aabb_collider.y = transform.position.y;
 

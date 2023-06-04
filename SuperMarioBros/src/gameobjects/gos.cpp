@@ -17,17 +17,17 @@ void update_main_character(const main_character_t& mc, key_state_t& key_state, f
 	glm::vec2 delta_pos_vec(0.f, 0.f);
 	rigidbody_t& rb = *get_rigidbody(mc.rigidbody_handle);
 	if (key_state.key_being_pressed['w'] || key_state.key_being_pressed[' ']) {
-		rb.cur_y_vel = 2*vel;
+		rb.vel.y = 2*vel;
 	}
 
 	if (key_state.key_being_pressed['a']) {
-		rb.cur_x_vel = -vel;
+		rb.vel.x = -vel;
 	}
 	else if (key_state.key_being_pressed['d']) {
-		rb.cur_x_vel = vel;
+		rb.vel.x = vel;
 	}
 	else {
-		rb.cur_x_vel = 0;
+		rb.vel.x = 0;
 	}
 }
 
