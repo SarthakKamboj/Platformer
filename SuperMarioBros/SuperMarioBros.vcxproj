@@ -140,8 +140,8 @@
     <ClCompile Include="src\renderer\basic\shape_renders.cpp" />
     <ClCompile Include="src\constants.h" />
     <ClCompile Include="src\glad\glad.c" />
-    <ClCompile Include="src\helper\conversion.cpp" />
-    <ClCompile Include="src\helper\io.cpp" />
+    <ClCompile Include="src\utils\conversion.cpp" />
+    <ClCompile Include="src\utils\io.cpp" />
     <ClCompile Include="src\init.cpp" />
     <ClCompile Include="src\input\input.cpp" />
     <ClCompile Include="src\main.cpp" />
@@ -157,8 +157,8 @@
     <ClInclude Include="src\gameobjects\gos.h" />
     <ClInclude Include="src\physics\physics.h" />
     <ClInclude Include="src\renderer\basic\shape_renders.h" />
-    <ClInclude Include="src\helper\io.h" />
-    <ClInclude Include="src\helper\conversion.h" />
+    <ClInclude Include="src\utils\io.h" />
+    <ClInclude Include="src\utils\conversion.h" />
     <ClInclude Include="src\input\input.h" />
     <ClInclude Include="src\renderer\opengl\buffers.h" />
     <ClInclude Include="src\renderer\opengl\object_data.h" />

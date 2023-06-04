@@ -1,7 +1,7 @@
 #include "resources.h"
 #include "stb/stb_image.h"
 #include <iostream>
-#include "helper/io.h"
+#include "utils/io.h"
 
 // TEXTURE
 texture_t create_texture(const char* path) {
