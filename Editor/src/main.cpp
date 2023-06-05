@@ -9,10 +9,15 @@
 #include "utils/time.h"
 #include "editorItems/gridline.h"
 #include <cmath>
+#include "imgui.h"
+#include "backends/imgui_impl_sdl2.h"
+#include "backends/imgui_impl_opengl3.h"
 
 /*
 Screen coordinates will always being (0,0) in the bottom left and (SCREEN_WIDTH, SCREEN_HEIGHT) in top right
 */
+
+// TODO: add imgui
 
 key_state_t key_state;
 
@@ -48,6 +53,15 @@ int main(int argc, char** argv) {
 		grid_square.y = floor(mouse_state.y / GRID_SQUARE_WIDTH);
 		transform.position.x = grid_square.x * GRID_SQUARE_WIDTH + GRID_SQUARE_WIDTH/2;
 		transform.position.y = grid_square.y * GRID_SQUARE_WIDTH + GRID_SQUARE_WIDTH/2;
+
+		ImGui_ImplOpenGL3_NewFrame();
+		ImGui_ImplSDL2_NewFrame();
+		ImGui::NewFrame();
+
+		ImGui::ShowDemoWindow();
+
+		ImGui::Render();
+
 		render(app);
 		float end = platformer::get_time_since_start_in_sec();
 		platformer::time_t::delta_time = end - start;

@@ -9,9 +9,11 @@
 #include "renderer/opengl/resources.h"
 #include "renderer/opengl/vertex.h"
 #include "renderer/basic/shape_renders.h"
+#include "imgui.h"
+#include "backends/imgui_impl_sdl2.h"
+#include "backends/imgui_impl_opengl3.h"
 
-
-SDL_Window* init_sdl() {
+void init_sdl(application_t& app) {
 	if (SDL_Init(SDL_INIT_EVERYTHING) != 0) {
 		const char* sdl_error = SDL_GetError();
 		std::string error_msg = "SDL could not be initialized: " + std::string(sdl_error);
@@ -46,7 +48,29 @@ SDL_Window* init_sdl() {
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-	return window;
+	IMGUI_CHECKVERSION();
+	ImGui::CreateContext();
+	ImGuiIO& io = ImGui::GetIO(); (void)io;
+	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
+	io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
+	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;         // Enable Docking
+	io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;       // Enable Multi-Viewport / Platform Windows
+
+	ImGui::StyleColorsDark();
+
+	ImGuiStyle& style = ImGui::GetStyle();
+	if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+	{
+		style.WindowRounding = 0.0f;
+		style.Colors[ImGuiCol_WindowBg].w = 1.0f;
+	}
+
+	const char* glsl_version = "#version 410";
+	ImGui_ImplSDL2_InitForOpenGL(window, context);
+	ImGui_ImplOpenGL3_Init(glsl_version);
+
+	app.window = window;
+	app.io = &io;
 }
 
 void init_rectangle_data() {
@@ -82,7 +106,7 @@ void init_rectangle_data() {
 }
 
 void init(application_t& app) {
-	app.window = init_sdl();
+	init_sdl(app);
 	app.running = true;
 	init_rectangle_data();
 }

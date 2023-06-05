@@ -1,0 +1,4 @@
+- add imgui
+- add paths for the level files to be stored
+- add image loading and selection
+- serialize level data into some sort of file
