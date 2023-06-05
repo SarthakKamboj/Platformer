@@ -7,7 +7,9 @@
 // will add spritesheet renderers as well in the future
 static std::vector<rectangle_render_t> rectangles;
 
-void render(application_t& app) {
+void render(application_t& app, camera_t& camera) {
+	ImGui::Render();
+
 	glClearColor(0.f, 0.f, 0.f, 1.f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -23,6 +25,7 @@ void render(application_t& app) {
 		SDL_GL_MakeCurrent(backup_current_window, backup_current_context);
 	}
 
+	shader_set_mat4(rectangle_render_t::obj_data.shader, "view", get_view_matrix(camera));
 	for (const rectangle_render_t& rectangle : rectangles) {
 		draw_rectangle_render(rectangle);
 	}

@@ -147,6 +147,7 @@
     <ClCompile Include="src\input\input.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\renderer\basic\shape_renders.cpp" />
+    <ClCompile Include="src\renderer\camera.cpp" />
     <ClCompile Include="src\renderer\opengl\buffers.cpp" />
     <ClCompile Include="src\renderer\opengl\object_data.cpp" />
     <ClCompile Include="src\renderer\opengl\resources.cpp" />
@@ -172,6 +173,7 @@
     <ClInclude Include="src\imgui-docking\imstb_truetype.h" />
     <ClInclude Include="src\input\input.h" />
     <ClInclude Include="src\renderer\basic\shape_renders.h" />
+    <ClInclude Include="src\renderer\camera.h" />
     <ClInclude Include="src\renderer\opengl\buffers.h" />
     <ClInclude Include="src\renderer\opengl\object_data.h" />
     <ClInclude Include="src\renderer\opengl\resources.h" />
