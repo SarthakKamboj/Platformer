@@ -105,8 +105,49 @@ void init_rectangle_data() {
 	shader_set_mat4(data.shader, "projection", projection);
 }
 
+void init_fbo_draw_data(application_t& app) {
+	opengl_object_data& data = app.fbo_draw_data;
+
+	vertex_t vertices[4];
+	float val = 1.f;
+	vertices[0] = create_vertex(glm::vec3(val, val, 0.0f), glm::vec3(0,1,1), glm::vec2(1.0f, 1.f)); // top right
+	vertices[1] = create_vertex(glm::vec3(val, -val, 0.0f), glm::vec3(0,0,1), glm::vec2(1.0f, 0.f)); // bottom right
+	vertices[2] = create_vertex(glm::vec3(-val, -val, 0.0f), glm::vec3(0,1,0), glm::vec2(0.f, 0.f)); // bottom left
+	vertices[3] = create_vertex(glm::vec3(-val, val, 0.0f), glm::vec3(1,0,0), glm::vec2(0.f, 1.0f)); // top left
+
+	data.vbo = create_vbo((float*)vertices, sizeof(vertices));
+
+	unsigned int indices[] = {
+		0, 1, 3,
+		1, 2, 3
+	};
+
+	data.ebo = create_ebo(indices, sizeof(indices));
+	data.vao = create_vao();
+
+	bind_vao(data.vao);
+	vao_enable_attribute(data.vao, data.vbo, 0, 3, GL_FLOAT, GL_FALSE, sizeof(vertex_t), offsetof(vertex_t, position));
+	vao_enable_attribute(data.vao, data.vbo, 1, 2, GL_FLOAT, GL_FALSE, sizeof(vertex_t), offsetof(vertex_t, tex_coord));
+	bind_ebo(data.ebo);
+	unbind_vao();
+	unbind_ebo();
+
+	data.shader = create_shader((SHADERS_PATH + "\\fbo.vert").c_str(), (SHADERS_PATH + "\\fbo.frag").c_str());
+	shader_set_mat4(data.shader, "model", glm::mat4(1));
+	glm::mat4 projection = glm::ortho(0.0f, (float)SCREEN_WIDTH, 0.0f, (float)SCREEN_HEIGHT);
+	shader_set_mat4(data.shader, "projection", projection);
+	transform_t transform;
+	transform.position.x = SCREEN_WIDTH / 2;
+	transform.position.y = SCREEN_HEIGHT / 2;
+	glm::mat4 model_matrix = get_model_matrix(transform);
+	shader_set_mat4(data.shader, "model", model_matrix);
+	shader_set_int(data.shader, "fbo_texture", 0);
+}
+
 void init(application_t& app) {
 	init_sdl(app);
 	app.running = true;
 	init_rectangle_data();
+	init_fbo_draw_data(app);
+	app.world_fbo = create_framebuffer();
 }

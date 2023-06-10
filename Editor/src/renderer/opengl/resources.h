@@ -19,8 +19,11 @@ glm::vec3 shader_get_vec3(const shader_t& shader, const char* var_name);
 
 struct texture_t {
 	GLuint id;
+	int width = -1, height = -1;
+	int num_channels = -1;
 };
 
 texture_t create_texture(const char* path);
 void bind_texture(const texture_t& texture);
+void bind_texture(int texture_id);
 void unbind_texture();

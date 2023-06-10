@@ -13,12 +13,15 @@
 #include "backends/imgui_impl_sdl2.h"
 #include "backends/imgui_impl_opengl3.h"
 #include "renderer/camera.h"
+#include "editorItems/worldItem.h"
+#include "imgui-filebrowser/imfilebrowser.h"
+#include "editorItems/addWorldItemModal.h"
 
 /*
 Screen coordinates will always being (0,0) in the bottom left and (SCREEN_WIDTH, SCREEN_HEIGHT) in top right
 */
 
-// TODO: add imgui
+// TODO: add texture images to select from
 
 key_state_t key_state;
 
@@ -45,6 +48,17 @@ int main(int argc, char** argv) {
 	camera_t camera = create_camera();
 	float x_offset = 0.f;
 
+	// texture_t texture = create_texture("C:\\Sarthak\\projects\\Platformer\\Editor\\resources\\Legacy-Fantasy - High Forest 2.0\\Legacy-Fantasy - High Forest 2.3\\Assets\\Hive.png");
+	create_world_item("C:\\Sarthak\\projects\\Platformer\\Editor\\resources\\Legacy-Fantasy - High Forest 2.0\\Legacy-Fantasy - High Forest 2.3\\Assets\\Hive.png", 5, 5);
+	create_world_item("C:\\Sarthak\\projects\\Platformer\\Editor\\resources\\Legacy-Fantasy - High Forest 2.0\\Legacy-Fantasy - High Forest 2.3\\Assets\\Hive.png", 5, 5);
+	create_world_item("C:\\Sarthak\\projects\\Platformer\\Editor\\resources\\Legacy-Fantasy - High Forest 2.0\\Legacy-Fantasy - High Forest 2.3\\Assets\\Hive.png", 5, 5);
+
+	texture_t tex = create_texture("C:\\Sarthak\\projects\\Platformer\\Editor\\resources\\Legacy-Fantasy - High Forest 2.0\\Legacy-Fantasy - High Forest 2.3\\Character\\Idle\\Idle-Sheet.png");
+	ImGui::FileBrowser file_browser;
+	file_browser.SetTitle("File Browser");
+	file_browser.SetTypeFilters({".png", ".jpg", ".JPG", ".jpeg", ".JPEG"});
+
+
 	while (app.running) {
 		float start = platformer::get_time_since_start_in_sec();
 		process_input(mouse_state, key_state, app.window);	
@@ -66,9 +80,81 @@ int main(int argc, char** argv) {
 		ImGui_ImplSDL2_NewFrame();
 		ImGui::NewFrame();
 
-		// ImGui::ShowDemoWindow();
+		ImGui::ShowDemoWindow();
 
-		render(app, camera);
+		if (ImGui::BeginMainMenuBar()) {
+			if (ImGui::BeginMenu("File")) {
+				if (ImGui::MenuItem("Add World Item")) {
+					file_browser.Open();
+				}
+				ImGui::EndMenu();
+			}
+			ImGui::EndMainMenuBar();
+		}
+
+		file_browser.Display();
+
+		if (file_browser.HasSelected())
+		{
+			std::cout << "Selected filename" << file_browser.GetSelected().string() << std::endl;
+			std::string path = file_browser.GetSelected().string();
+			file_browser.ClearSelected();
+			open_add_world_modal(path);
+		}
+
+		/*
+		if (ImGui::BeginPopupModal("Add World Item", NULL, ImGuiWindowFlags_AlwaysAutoResize)) {
+			if (ImGui::Button("Cancel")) {
+				ImGui::CloseCurrentPopup();
+			}
+			ImGui::EndPopup();
+		}
+		*/
+
+		ImGuiWindowFlags window_flags = ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking;
+		const ImGuiViewport* viewport = ImGui::GetMainViewport();
+        ImGui::SetNextWindowPos(viewport->WorkPos);
+        ImGui::SetNextWindowSize(viewport->WorkSize);
+        ImGui::SetNextWindowViewport(viewport->ID);
+        ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
+        ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
+        window_flags |= ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
+        window_flags |= ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
+
+        ImGui::PopStyleVar(2);
+		ImGuiIO& io = ImGui::GetIO();
+
+		bool open = true;
+		ImGui::Begin("DockSpace Demo", &open, window_flags);
+		if (io.ConfigFlags & ImGuiConfigFlags_DockingEnable)
+		{
+			ImGuiDockNodeFlags dockspace_flags = ImGuiDockNodeFlags_None;
+			ImGuiID dockspace_id = ImGui::GetID("DockSpace");
+			ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspace_flags);
+		}
+		else
+		{
+			std::cout << "imgui docking not enabled" << std::endl;
+		}
+		ImGui::End();
+
+		// ImGui::Image((void*)texture.id, ImVec2(texture.width, texture.height));
+		/*
+		if (ImGui::BeginMainMenuBar())
+		{
+			if (ImGui::BeginMenu("Edit"))
+			{
+				if (ImGui::MenuItem("Add world item", "CTRL+A")) {
+
+				}
+				ImGui::Separator();
+				ImGui::EndMenu();
+			}
+			ImGui::EndMainMenuBar();
+		}
+		*/
+
+		render(app, camera, tex);
 		float end = platformer::get_time_since_start_in_sec();
 		platformer::time_t::delta_time = end - start;
 	}

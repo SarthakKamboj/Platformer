@@ -7,18 +7,17 @@
 texture_t create_texture(const char* path) {
 	texture_t texture;
 
-	int num_channels, width, height;
 	stbi_set_flip_vertically_on_load(true);
-	unsigned char* data = stbi_load(path, &width, &height, &num_channels, 0);
+	unsigned char* data = stbi_load(path, &texture.width, &texture.height, &texture.num_channels, 0);
 
 	glGenTextures(1, &texture.id);
 	glBindTexture(GL_TEXTURE_2D, texture.id);
 	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-	if (num_channels == 3) {
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+	if (texture.num_channels == 3) {
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, texture.width, texture.height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
 	}
 	else {
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, texture.width, texture.height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
 	}
 	glGenerateMipmap(GL_TEXTURE_2D);
 	glBindTexture(GL_TEXTURE_2D, 0);
@@ -30,6 +29,11 @@ texture_t create_texture(const char* path) {
 
 void bind_texture(const texture_t& texture) {
 	glBindTexture(GL_TEXTURE_2D, texture.id);
+}
+
+void bind_texture(int texture_id) {
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, texture_id);
 }
 
 void unbind_texture() {
@@ -54,6 +58,7 @@ shader_t create_shader(const char* vert_path, const char* frag_path) {
 	if (!success)
 	{
 		glGetShaderInfoLog(vert_shader, 512, NULL, info_log);
+		std::cout << std::string(info_log) << std::endl;
 		throw std::runtime_error("ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" + std::string(info_log));
 	}
 
@@ -65,6 +70,7 @@ shader_t create_shader(const char* vert_path, const char* frag_path) {
 	if (!success)
 	{
 		glGetShaderInfoLog(frag_shader, 512, NULL, info_log);
+		std::cout << std::string(info_log) << std::endl;
 		throw std::runtime_error("ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n" + std::string(info_log));
 	}
 

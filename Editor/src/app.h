@@ -5,11 +5,14 @@
 #include "input/input.h"
 #include "imgui.h"
 #include "renderer/camera.h"
+#include "renderer/opengl/object_data.h"
 
 struct application_t {
 	bool running = true;
 	SDL_Window* window = NULL;
 	ImGuiIO* io;
+	framebuffer_t world_fbo;
+	opengl_object_data fbo_draw_data;
 };
 
 void init(application_t& app);

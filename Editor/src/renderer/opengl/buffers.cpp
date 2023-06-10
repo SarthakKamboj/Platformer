@@ -1,5 +1,7 @@
 #include "buffers.h"
 #include <array>
+#include "constants.h"
+#include <iostream>
 
 // VBO
 vbo_t create_vbo(const float* vertices, const int data_size) {
@@ -88,4 +90,74 @@ void vao_enable_attribute(vao_t& vao, const vbo_t& vbo, const int attrId, const 
 
 void delete_vao(const vao_t& vao) {
 	glDeleteVertexArrays(1, &vao.id);
+}
+
+// framebuffers
+framebuffer_t create_framebuffer() {
+	framebuffer_t framebuffer;
+	glGenFramebuffers(1, &framebuffer.id);
+	glBindFramebuffer(GL_FRAMEBUFFER, framebuffer.id);
+
+	glGenTextures(1, &framebuffer.framebuffer_texture);
+	glBindTexture(GL_TEXTURE_2D, framebuffer.framebuffer_texture);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, SCREEN_WIDTH, SCREEN_HEIGHT, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+	// learn what these texture parameters do since it effects how the colorbuffer looks in the end
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	// glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+	float color[] = { 1.0f, 0.0f, 0.0f, 1.0f };
+	glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, color);
+	glBindTexture(GL_TEXTURE_2D, 0);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, framebuffer.framebuffer_texture, 0);
+
+	glGenRenderbuffers(1, &framebuffer.renderbuffer);
+	glBindRenderbuffer(GL_RENDERBUFFER, framebuffer.renderbuffer);
+	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, SCREEN_WIDTH, SCREEN_HEIGHT);
+	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, framebuffer.renderbuffer);
+
+	auto status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+	if (status != GL_FRAMEBUFFER_COMPLETE) {
+		std::cout << "framebuffer error: " << status << std::endl;
+		switch (status) {
+		case GL_FRAMEBUFFER_UNDEFINED:
+			std::cout << "undefined" << std::endl;
+			break;
+		case GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT:
+			std::cout << "incomplete attachement" << std::endl;
+			break;
+		case GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT:
+			std::cout << "missing attachement" << std::endl;
+			break;
+		case GL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER:
+			std::cout << "GL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER" << std::endl;
+			break;
+		case GL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER:
+			std::cout << "GL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER" << std::endl;
+			break;
+		case GL_FRAMEBUFFER_UNSUPPORTED:
+			std::cout << "GL_FRAMEBUFFER_UNSUPPORTED" << std::endl;
+			break;
+		case GL_FRAMEBUFFER_INCOMPLETE_MULTISAMPLE:
+			std::cout << "GL_FRAMEBUFFER_INCOMPLETE_MULTISAMPLE" << std::endl;
+			break;
+		case GL_FRAMEBUFFER_INCOMPLETE_LAYER_TARGETS:
+			std::cout << "GL_FRAMEBUFFER_INCOMPLETE_LAYER_TARGETS" << std::endl;
+			break;
+		default:
+			std::cout << "something else" << std::endl;
+		}
+	}
+
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	return framebuffer;
+}
+
+void bind_framebuffer(const framebuffer_t& framebuffer) {
+	glBindFramebuffer(GL_FRAMEBUFFER, framebuffer.id);
+}
+
+void unbind_framebuffer() {
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }

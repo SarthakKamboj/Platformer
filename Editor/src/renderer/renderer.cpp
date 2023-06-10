@@ -3,17 +3,50 @@
 #include "imgui.h"
 #include "backends/imgui_impl_opengl3.h"
 #include "SDL.h"
+#include "editorItems/worldItem.h"
+#include "renderer/opengl/buffers.h"
+#include "constants.h"
+#include <iostream>
 
 // will add spritesheet renderers as well in the future
 static std::vector<rectangle_render_t> rectangles;
 
-void render(application_t& app, camera_t& camera) {
-	ImGui::Render();
+void render(application_t& app, camera_t& camera, texture_t& tex) {
+	render_world_items();
 
+	bind_framebuffer(app.world_fbo);
+	glViewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 	glClearColor(0.f, 0.f, 0.f, 1.f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+	shader_set_mat4(rectangle_render_t::obj_data.shader, "view", get_view_matrix(camera));
+	for (const rectangle_render_t& rectangle : rectangles) {
+		draw_rectangle_render(rectangle);
+	}
+	unbind_framebuffer();
+
+	glClearColor(0.f, 1.f, 0.f, 1.f);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	/*
+	bind_vao(app.fbo_draw_data.vao);
+	bind_shader(app.fbo_draw_data.shader);
+
+	bind_texture(app.world_fbo.framebuffer_texture);
+	draw_obj(app.fbo_draw_data);
+	*/
+
+	ImGui::Begin("World");
+	ImVec2 size = ImGui::GetWindowSize();
+	float x_ratio = size.x / SCREEN_WIDTH;
+	float y_ratio = size.y / SCREEN_HEIGHT;
+	float ratio = fmin(x_ratio, y_ratio);
+	ImGui::Image((void*)app.world_fbo.framebuffer_texture, ImVec2(SCREEN_WIDTH * ratio, SCREEN_HEIGHT * ratio), ImVec2(0, 1), ImVec2(1, 0));
+	ImGui::End();
+	ImGui::ShowDemoWindow();
+
+	ImGui::Render();
+	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());	
 
 	ImGuiIO& io = *app.io;
 	if(io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
@@ -23,11 +56,6 @@ void render(application_t& app, camera_t& camera) {
 		ImGui::UpdatePlatformWindows();
 		ImGui::RenderPlatformWindowsDefault();
 		SDL_GL_MakeCurrent(backup_current_window, backup_current_context);
-	}
-
-	shader_set_mat4(rectangle_render_t::obj_data.shader, "view", get_view_matrix(camera));
-	for (const rectangle_render_t& rectangle : rectangles) {
-		draw_rectangle_render(rectangle);
 	}
 
 	SDL_GL_SwapWindow(app.window);
