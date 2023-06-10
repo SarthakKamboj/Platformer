@@ -7,11 +7,14 @@
 #include "renderer/opengl/buffers.h"
 #include "constants.h"
 #include <iostream>
+#include "editorItems/addWorldItemModal.h"
 
 // will add spritesheet renderers as well in the future
 static std::vector<rectangle_render_t> rectangles;
 
 void render(application_t& app, camera_t& camera, texture_t& tex) {
+
+	render_add_world_item_modal();
 	render_world_items();
 
 	bind_framebuffer(app.world_fbo);
