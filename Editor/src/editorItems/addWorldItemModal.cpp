@@ -13,7 +13,7 @@ void open_add_world_modal(const std::string& file_path) {
 	num_squares_wide = 1;
 }
 
-void render_add_world_item_modal() {
+void update_add_world_item_modal() {
 	if (ImGui::BeginPopupModal(ADD_WORLD_ITEM_MODAL_TITLE, NULL, ImGuiWindowFlags_AlwaysAutoResize)) {
 		std::string path_info = std::string("Image Path: ") + img_file_path;
 		ImGui::Text(path_info.c_str());
