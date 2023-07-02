@@ -22,6 +22,7 @@ struct texture_t {
 	GLuint id;
 	int width = -1, height = -1;
 	int num_channels = -1;
+    std::string path;
 };
 
 int create_texture(const char* path);

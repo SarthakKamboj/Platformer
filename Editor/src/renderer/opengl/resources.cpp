@@ -28,6 +28,8 @@ int create_texture(const char* path) {
 
 	stbi_image_free(data);
 
+    texture.path = std::string(path);
+
     textures.push_back(texture);
 
 	return textures.size() - 1;
