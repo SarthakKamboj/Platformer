@@ -11,8 +11,9 @@ struct application_t {
 	bool running = true;
 	SDL_Window* window = NULL;
 	ImGuiIO* io;
-	framebuffer_t world_fbo;
+	framebuffer_t world_grid_fbo;
 	opengl_object_data fbo_draw_data;
+	int debug_rec_handle = -1;
 };
 
 void init(application_t& app);
