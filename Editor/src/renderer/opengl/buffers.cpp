@@ -100,7 +100,7 @@ framebuffer_t create_framebuffer() {
 
 	glGenTextures(1, &framebuffer.framebuffer_texture);
 	glBindTexture(GL_TEXTURE_2D, framebuffer.framebuffer_texture);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, SCREEN_WIDTH, SCREEN_HEIGHT, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, WINDOW_WIDTH, WINDOW_HEIGHT, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
 	// learn what these texture parameters do since it effects how the colorbuffer looks in the end
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -114,7 +114,7 @@ framebuffer_t create_framebuffer() {
 
 	glGenRenderbuffers(1, &framebuffer.renderbuffer);
 	glBindRenderbuffer(GL_RENDERBUFFER, framebuffer.renderbuffer);
-	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, SCREEN_WIDTH, SCREEN_HEIGHT);
+	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, WINDOW_WIDTH, WINDOW_HEIGHT);
 	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, framebuffer.renderbuffer);
 
 	auto status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
