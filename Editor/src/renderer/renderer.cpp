@@ -10,7 +10,6 @@
 #include "editorItems/addWorldItemModal.h"
 
 // will add spritesheet renderers as well in the future
-std::vector<rectangle_render_t> rectangles;
 extern int debug_bottom_left_world_grid_tex;
 
 void render(application_t& app, camera_t& camera) {
@@ -21,10 +20,7 @@ void render(application_t& app, camera_t& camera) {
 	glClearColor(0.f, 0.f, 0.f, 1.f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	shader_set_mat4(rectangle_render_t::obj_data.shader, "view", get_view_matrix(camera));
-	for (const rectangle_render_t& rectangle : rectangles) {
-		draw_rectangle_render(rectangle);
-	}
+    draw_rectangle_renders(camera);
 
 	unbind_framebuffer();
 
@@ -55,9 +51,4 @@ void render(application_t& app, camera_t& camera) {
 	}
 
 	SDL_GL_SwapWindow(app.window);
-}
-
-int add_rectangle_to_renderer(const rectangle_render_t& rectangle) {
-	rectangles.push_back(rectangle);
-	return rectangles.size() - 1;
 }
