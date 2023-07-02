@@ -22,6 +22,11 @@ int create_rectangle_render(int transform_handle, glm::vec3& color, int tex_hand
 	return add_rectangle_to_renderer(rectangle);
 }
 
+void remove_rectangle_render(int rec_render_handle) {
+    remove_transform(rectangles[rec_render_handle].transform_handle);
+    rectangles.erase(rectangles.begin() + rec_render_handle, rectangles.begin() + rec_render_handle + 1);
+}
+
 void draw_rectangle_render(const rectangle_render_t& rectangle) {
 	transform_t cur_transform = *get_transform(rectangle.transform_handle);
 	cur_transform.position += rectangle._internal_transform.position;

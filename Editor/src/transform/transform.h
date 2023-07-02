@@ -10,5 +10,6 @@ struct transform_t {
 };
 
 int create_transform(glm::vec3 position, glm::vec3 scale, float rot_deg);
+void remove_transform(int transform_handle);
 glm::mat4 get_model_matrix(const transform_t& transform);
 transform_t* get_transform(int transform_handle);

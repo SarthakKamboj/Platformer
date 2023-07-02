@@ -24,3 +24,7 @@ glm::mat4 get_model_matrix(const transform_t& transform) {
 transform_t* get_transform(int transform_handle) {
 	return &transforms[transform_handle];
 }
+
+void remove_transform(int transform_handle) {
+    transforms.erase(transforms.begin() + transform_handle, transforms.begin() + transform_handle + 1);
+}

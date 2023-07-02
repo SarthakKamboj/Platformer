@@ -29,6 +29,7 @@ void write_world_item_to_file(world_item_t& world_item) {
 	out_file.open("world_items.txt", std::ios_base::app);
     texture_t& tex = get_texture(world_item.texture_handle);
 	out_file << tex.path << WORLD_ITEM_TEXT_FILE_DELIM << std::to_string(world_item.grid_squares_width) << WORLD_ITEM_TEXT_FILE_DELIM << std::to_string(world_item.grid_squares_height) << "\n";
+    out_file.close();
 }
 
 world_item_t* get_world_item(int world_handle) {
@@ -67,7 +68,7 @@ void update_world_item_catalog() {
 	ImGui::End();
 }
 
-int place_world_item(int world_item_handle, const glm::vec2& top_left_grid_square) {
+int place_world_item(int world_item_handle, const glm::vec2& bottom_left_grid_square_pos) {
     if (world_item_handle < 0) {
         std::cout << "could not place item since nothing was selected" << std::endl;
         return -1;
@@ -75,19 +76,19 @@ int place_world_item(int world_item_handle, const glm::vec2& top_left_grid_squar
 
     for (const placed_world_item_t& placed_item : placed_items) {
         if (placed_item.world_item_handle == world_item_handle && 
-           placed_item.top_left_grid_square_pos == top_left_grid_square ) {
+           placed_item.bottom_left_grid_square_pos == bottom_left_grid_square_pos ) {
             return -1;
            }
     }
 
 	placed_world_item_t placed_world_item;
 	placed_world_item.world_item_handle = world_item_handle;
-	placed_world_item.top_left_grid_square_pos = top_left_grid_square;
+	placed_world_item.bottom_left_grid_square_pos = bottom_left_grid_square_pos;
 
     world_item_t& world_item = world_items[world_item_handle];
     glm::vec2 center_grid_square;
-    center_grid_square.x = top_left_grid_square.x + (world_item.grid_squares_width / 2.f);
-    center_grid_square.y = top_left_grid_square.y + (world_item.grid_squares_height / 2.f);
+    center_grid_square.x = bottom_left_grid_square_pos.x + (world_item.grid_squares_width / 2.f);
+    center_grid_square.y = bottom_left_grid_square_pos.y + (world_item.grid_squares_height / 2.f);
 
     glm::vec3 position(1.f);
     position.x = center_grid_square.x * GRID_SQUARE_WIDTH;
@@ -105,4 +106,16 @@ int place_world_item(int world_item_handle, const glm::vec2& top_left_grid_squar
 
 placed_world_item_t* get_placed_world_item(int placed_handle) {
 	return &placed_items[placed_handle];
+}
+
+void remove_placed_world_item(glm::vec2 grid_square_pos) {
+    for (int i = 0; i < placed_items.size(); i++) {
+        const placed_world_item_t& placed_item = placed_items[i];
+        if (placed_item.bottom_left_grid_square_pos.x == grid_square_pos.x &&
+            placed_item.bottom_left_grid_square_pos.y == grid_square_pos.y) {
+            remove_rectangle_render(placed_item.rec_render_handle);
+            placed_items.erase(placed_items.begin() + i, placed_items.begin() + i + 1);
+            i--;
+        }
+    }
 }

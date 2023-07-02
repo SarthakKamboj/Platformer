@@ -13,7 +13,7 @@ struct world_item_t {
 
 struct placed_world_item_t {
 	int world_item_handle = -1;
-	glm::vec2 top_left_grid_square_pos;
+	glm::vec2 bottom_left_grid_square_pos;
     int rec_render_handle = -1;
 };
 
@@ -22,5 +22,6 @@ void write_world_item_to_file(world_item_t& world_item);
 world_item_t* get_world_item(int world_handle);
 void update_world_item_catalog();
 // pass in the world item handle and the top left grid square
-int place_world_item(int world_item_handle, const glm::vec2& top_left_grid_square);
+int place_world_item(int world_item_handle, const glm::vec2& bottom_left_grid_square_pos);
 placed_world_item_t* get_placed_world_item(int placed_handle);
+void remove_placed_world_item(glm::vec2 grid_square_pos);

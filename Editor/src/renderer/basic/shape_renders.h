@@ -18,5 +18,6 @@ struct rectangle_render_t {
 };
 
 int create_rectangle_render(int transform_handle, glm::vec3& color, int tex_handle, float width, float height, bool wireframe, float tex_influence);
+void remove_rectangle_render(int rec_render_handle);
 void draw_rectangle_render(const rectangle_render_t& rectangle);
 void draw_rectangle_render(int rectangle_handle);

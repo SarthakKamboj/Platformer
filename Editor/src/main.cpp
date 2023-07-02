@@ -201,6 +201,9 @@ int main(int argc, char** argv) {
                     // place_world_item(world_item_t::selected_world_item_handle, transform);
                     place_world_item(world_item_t::selected_world_item_handle, hovered_grid_square);
 				}
+                if (mouse_state.right_mouse_up) {
+                    remove_placed_world_item(hovered_grid_square);
+                }
 			}
 			ImGui::End();
 		}
