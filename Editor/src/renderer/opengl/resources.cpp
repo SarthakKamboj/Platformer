@@ -9,6 +9,7 @@
 static std::vector<texture_t> textures;
 
 int create_texture(const char* path) {
+    static int running_count = 0;
 	texture_t texture;
 
 	stbi_set_flip_vertically_on_load(true);
@@ -29,10 +30,10 @@ int create_texture(const char* path) {
 	stbi_image_free(data);
 
     texture.path = std::string(path);
-
+    texture.handle = running_count;
     textures.push_back(texture);
-
-	return textures.size() - 1;
+    running_count++;
+	return texture.handle;
 }
 
 void bind_texture(const texture_t& texture) {
@@ -40,7 +41,11 @@ void bind_texture(const texture_t& texture) {
 }
 
 void bind_texture_by_handle(int texture_handle) {
-	glBindTexture(GL_TEXTURE_2D, textures[texture_handle].id);
+    for (texture_t& texture : textures) {
+        if (texture.handle == texture_handle) {
+            glBindTexture(GL_TEXTURE_2D, texture.id);
+        }
+    }
 }
 
 void bind_texture_by_id(int texture_id) {
@@ -52,8 +57,13 @@ void unbind_texture() {
 	glBindTexture(GL_TEXTURE_2D, 0);
 }
 
-texture_t& get_texture(int texture_handle) {
-    return textures[texture_handle];
+texture_t* get_texture(int texture_handle) {
+    for (texture_t& texture : textures) {
+        if (texture.handle == texture_handle) {
+            return &texture;
+        }
+    }
+    return NULL;
 }
 
 // SHADER

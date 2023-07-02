@@ -194,13 +194,11 @@ int main(int argc, char** argv) {
 				transform.position.y = hovered_grid_square.y * GRID_SQUARE_WIDTH + GRID_SQUARE_WIDTH / 2;
 
                 // if grid square gets selected
-				if (mouse_state.left_mouse_up) {
-					// int transform_handle = create_transform(transform.position, transform.scale, transform.rotation_deg);
-					// glm::vec3 color(0, 0, 1);
-					// create_rectangle_render(transform_handle, color, -1, GRID_SQUARE_WIDTH, GRID_SQUARE_WIDTH, false, 0);
-                    // place_world_item(world_item_t::selected_world_item_handle, transform);
+				if (mouse_state.left_mouse_up) {	
                     place_world_item(world_item_t::selected_world_item_handle, hovered_grid_square);
 				}
+
+				// remove on right mouse click
                 if (mouse_state.right_mouse_up) {
                     remove_placed_world_item(hovered_grid_square);
                 }

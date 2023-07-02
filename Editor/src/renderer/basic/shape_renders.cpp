@@ -6,9 +6,10 @@
 
 opengl_object_data rectangle_render_t::obj_data{};
 
-extern std::vector<rectangle_render_t> rectangles;
+std::vector<rectangle_render_t> rectangles;
 
 int create_rectangle_render(int transform_handle, glm::vec3& color, int tex_handle, float width, float height, bool wireframe, float tex_influence) {
+    static int running_count = 0;
 	rectangle_render_t rectangle;
 	rectangle.transform_handle = transform_handle;
 	rectangle.width = width;
@@ -19,12 +20,34 @@ int create_rectangle_render(int transform_handle, glm::vec3& color, int tex_hand
     // 2D ortho projection represented in pixels and original rec mesh is 1x1, so scale rectangle mesh by rec width and height
 	rectangle._internal_transform.scale = glm::vec3(width, height, 1.f);
     rectangle.texture_handle = tex_handle;
-	return add_rectangle_to_renderer(rectangle);
+    rectangle.handle = running_count;
+	rectangles.push_back(rectangle);
+    running_count++;
+	return rectangle.handle;
+}
+
+rectangle_render_t* get_rectangle_render(int rec_render_handle) {
+    for (rectangle_render_t& rec_render : rectangles) {
+        if (rec_render.handle == rec_render_handle) {
+            return &rec_render;
+        }
+    }
+    return NULL;
 }
 
 void remove_rectangle_render(int rec_render_handle) {
-    remove_transform(rectangles[rec_render_handle].transform_handle);
-    rectangles.erase(rectangles.begin() + rec_render_handle, rectangles.begin() + rec_render_handle + 1);
+    rectangle_render_t& rec_render = *get_rectangle_render(rec_render_handle);
+    remove_transform(rec_render.transform_handle);
+    int idx_to_remove = -1;
+    for (int i = 0; i < rectangles.size(); i++) {
+        if (rec_render_handle == rectangles[i].handle) {
+            idx_to_remove = i;
+            break;
+        }
+    }
+    if (idx_to_remove != -1) {
+        rectangles.erase(rectangles.begin() + idx_to_remove, rectangles.begin() + idx_to_remove + 1);
+    }
 }
 
 void draw_rectangle_render(const rectangle_render_t& rectangle) {
@@ -50,5 +73,17 @@ void draw_rectangle_render(const rectangle_render_t& rectangle) {
 
 
 void draw_rectangle_render(int rectangle_handle) {
-	draw_rectangle_render(rectangles[rectangle_handle]);
+    for (rectangle_render_t& rectangle : rectangles) {
+        if (rectangle_handle == rectangle.handle) {
+	        draw_rectangle_render(rectangle);
+            break;
+        }
+    }
+}
+
+void draw_rectangle_renders(camera_t& camera) {
+	shader_set_mat4(rectangle_render_t::obj_data.shader, "view", get_view_matrix(camera));
+	for (const rectangle_render_t& rectangle : rectangles) {
+		draw_rectangle_render(rectangle);
+	}
 }

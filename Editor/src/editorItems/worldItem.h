@@ -4,7 +4,8 @@
 #include "transform/transform.h"
 
 struct world_item_t {
-	int texture_handle;
+    int handle = -1;
+	int texture_handle = -1;
 	int grid_squares_width = -1;
 	int grid_squares_height = -1;
 
@@ -12,6 +13,7 @@ struct world_item_t {
 };
 
 struct placed_world_item_t {
+    int handle = -1;
 	int world_item_handle = -1;
 	glm::vec2 bottom_left_grid_square_pos;
     int rec_render_handle = -1;

@@ -15,25 +15,33 @@ std::vector<placed_world_item_t> placed_items;
 int world_item_t::selected_world_item_handle = -1;
 
 int create_world_item(const char* path, int squares_width, int squares_height) {
+    static int running_count = 0;
 	world_item_t world_item;
 	world_item.texture_handle = create_texture(path);
 	world_item.grid_squares_width = squares_width;
 	world_item.grid_squares_height = squares_height;	
+    world_item.handle = running_count;
 	world_items.push_back(world_item);
-    world_item_t::selected_world_item_handle = world_items.size() - 1;
-	return world_items.size() - 1;
+    running_count++;
+    world_item_t::selected_world_item_handle = world_item.handle;
+	return world_item.handle;
 }
 
 void write_world_item_to_file(world_item_t& world_item) {
     std::ofstream out_file;
 	out_file.open("world_items.txt", std::ios_base::app);
-    texture_t& tex = get_texture(world_item.texture_handle);
+    texture_t& tex = *get_texture(world_item.texture_handle);
 	out_file << tex.path << WORLD_ITEM_TEXT_FILE_DELIM << std::to_string(world_item.grid_squares_width) << WORLD_ITEM_TEXT_FILE_DELIM << std::to_string(world_item.grid_squares_height) << "\n";
     out_file.close();
 }
 
 world_item_t* get_world_item(int world_handle) {
-	return &world_items[world_handle];
+    for (world_item_t& world_item : world_items) {
+        if (world_item.handle == world_handle) {
+            return &world_item;
+        }
+    }
+	return NULL;
 }
 
 extern mouse_state_t mouse_state;
@@ -47,7 +55,7 @@ void update_world_item_catalog() {
         // https://github.com/ocornut/imgui/issues/74
         ImGui::PushID(i);
 		world_item_t& item = world_items[i];
-		texture_t& texture = get_texture(item.texture_handle);
+		texture_t& texture = *get_texture(item.texture_handle);
         float ratio = 50.f / texture.height;
 		ImGui::Image((void*)texture.id, ImVec2(texture.width * ratio, texture.height * ratio));
         std::string width_text = "Width: " + std::to_string(item.grid_squares_width);
@@ -81,11 +89,15 @@ int place_world_item(int world_item_handle, const glm::vec2& bottom_left_grid_sq
            }
     }
 
+    static int running_count = 0;
+
 	placed_world_item_t placed_world_item;
 	placed_world_item.world_item_handle = world_item_handle;
 	placed_world_item.bottom_left_grid_square_pos = bottom_left_grid_square_pos;
+    placed_world_item.handle = running_count;
+    running_count++;
 
-    world_item_t& world_item = world_items[world_item_handle];
+    world_item_t& world_item = *get_world_item(world_item_handle);
     glm::vec2 center_grid_square;
     center_grid_square.x = bottom_left_grid_square_pos.x + (world_item.grid_squares_width / 2.f);
     center_grid_square.y = bottom_left_grid_square_pos.y + (world_item.grid_squares_height / 2.f);
@@ -97,15 +109,20 @@ int place_world_item(int world_item_handle, const glm::vec2& bottom_left_grid_sq
     int transform_handle = create_transform(position, glm::vec3(1), 0);
 	glm::vec3 color(1);
     placed_world_item.rec_render_handle = create_rectangle_render(transform_handle, color, 
-        world_items[world_item_handle].texture_handle, 
+        world_item.texture_handle, 
         world_item.grid_squares_width * GRID_SQUARE_WIDTH, 
         world_item.grid_squares_height * GRID_SQUARE_WIDTH, false, 1.0f);
 	placed_items.push_back(placed_world_item);
-	return placed_items.size() - 1;
+	return placed_world_item.handle;
 }
 
 placed_world_item_t* get_placed_world_item(int placed_handle) {
-	return &placed_items[placed_handle];
+    for (placed_world_item_t& placed_item : placed_items) {
+        if (placed_handle == placed_item.handle) {
+            return &placed_item;
+        }
+    }
+    return NULL;
 }
 
 void remove_placed_world_item(glm::vec2 grid_square_pos) {
