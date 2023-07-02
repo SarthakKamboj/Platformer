@@ -5,9 +5,9 @@
 
 camera_t create_camera() {
 	camera_t camera;
-	camera.transform_handle = create_transform(glm::vec3(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 5.f), glm::vec3(1.f), 0);
+	camera.transform_handle = create_transform(glm::vec3(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2, 5.f), glm::vec3(1.f), 0);
 	camera.transform = get_transform(camera.transform_handle);
-	camera.look_at = glm::vec3(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 0.f);
+	camera.look_at = glm::vec3(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2, 0.f);
 	return camera;
 }
 
@@ -21,7 +21,7 @@ void update_camera(camera_t& camera, key_state_t& key_state) {
 
 glm::mat4 get_view_matrix(camera_t& camera) {
 	glm::mat4 view(1.0f);
-	glm::vec3 translate(-camera.transform->position.x + (SCREEN_WIDTH/2), -camera.transform->position.y + (SCREEN_HEIGHT/2), 0.f);
+	glm::vec3 translate(-camera.transform->position.x + (WINDOW_WIDTH/2), -camera.transform->position.y + (WINDOW_HEIGHT/2), 0.f);
 	view = glm::translate(view, translate);
 	return view;
 }
