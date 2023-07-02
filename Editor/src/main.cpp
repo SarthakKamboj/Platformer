@@ -24,9 +24,11 @@
 Screen coordinates will always being (0,0) in the bottom left and (SCREEN_WIDTH, SCREEN_HEIGHT) in top right
 */
 
-// TODO: place textures in world map
+// TODO: seems like things stop rendering after 14 world items get placed
 
 int debug_bottom_left_world_grid_tex = -1;
+
+mouse_state_t mouse_state;
 
 std::ostream& operator<< (std::ostream& stream, const ImVec2& vec) {
 	stream << "x: " << vec.x << " y: " << vec.y;
@@ -35,7 +37,6 @@ std::ostream& operator<< (std::ostream& stream, const ImVec2& vec) {
 
 int main(int argc, char** argv) {
 	application_t app;
-	mouse_state_t mouse_state;
     key_state_t key_state;
 
 	init(app);
@@ -53,8 +54,9 @@ int main(int argc, char** argv) {
 
 	glm::vec3 hover_color(0, 1, 1);
 	int transform_handle = create_transform(glm::vec3(0.f), glm::vec3(1.f), 0.f);
-	transform_t& transform = *get_transform(transform_handle);
 	create_rectangle_render(transform_handle, hover_color, -1, GRID_SQUARE_WIDTH, GRID_SQUARE_WIDTH, false, 0);
+    transform_t& transform = *get_transform(transform_handle);
+
 
 	camera_t camera = create_camera();
 
@@ -66,9 +68,10 @@ int main(int argc, char** argv) {
 	transform_t& debug_transform = *get_transform(debug_transform_handle);
 	debug_bottom_left_world_grid_tex = create_rectangle_render(debug_transform_handle, selected_color, -1, 10, 10, false, 0);
 
-	create_world_item("C:\\Sarthak\\projects\\Platformer\\Editor\\resources\\Legacy-Fantasy - High Forest 2.0\\Legacy-Fantasy - High Forest 2.3\\Assets\\Hive.png", 5, 5);
+	// create_world_item("C:\\Sarthak\\projects\\Platformer\\Editor\\resources\\Legacy-Fantasy - High Forest 2.0\\Legacy-Fantasy - High Forest 2.3\\Assets\\Hive.png", 5, 5);
 	// create_world_item("C:\\Sarthak\\neo-buddy\\buddy.jpg", 5, 5);
 	// create_world_item("C:\\Sarthak\\projects\\Platformer\\Editor\\resources\\Legacy-Fantasy - High Forest 2.0\\Legacy-Fantasy - High Forest 2.3\\Assets\\Hive.png", 5, 5);
+	// create_world_item("C:\\Sarthak\\neo-buddy\\buddy.jpg", 5, 5);
 	// create_world_item("C:\\Sarthak\\projects\\Platformer\\Editor\\resources\\Legacy-Fantasy - High Forest 2.0\\Legacy-Fantasy - High Forest 2.3\\Assets\\Hive.png", 5, 5);
 
 	// texture_t tex = create_texture("C:\\Sarthak\\projects\\Platformer\\Editor\\resources\\Legacy-Fantasy - High Forest 2.0\\Legacy-Fantasy - High Forest 2.3\\Character\\Idle\\Idle-Sheet.png");
@@ -173,7 +176,6 @@ int main(int argc, char** argv) {
 				bottom_left_world_grid_tex_pos.x = top_left_window.x;
 				bottom_left_world_grid_tex_pos.y = top_left_window.y - tex_height - WINDOW_TITLE_BAR_HEIGHT;
 
-				std::cout << bottom_left_world_grid_tex_pos << std::endl;
 				debug_transform.position.x = bottom_left_world_grid_tex_pos.x;
 				debug_transform.position.y = bottom_left_world_grid_tex_pos.y;
 				debug_transform.position.z = 0;
@@ -196,7 +198,8 @@ int main(int argc, char** argv) {
 					// int transform_handle = create_transform(transform.position, transform.scale, transform.rotation_deg);
 					// glm::vec3 color(0, 0, 1);
 					// create_rectangle_render(transform_handle, color, -1, GRID_SQUARE_WIDTH, GRID_SQUARE_WIDTH, false, 0);
-                    place_world_item(world_item_t::selected_world_item_handle, transform);
+                    // place_world_item(world_item_t::selected_world_item_handle, transform);
+                    place_world_item(world_item_t::selected_world_item_handle, hovered_grid_square);
 				}
 			}
 			ImGui::End();
