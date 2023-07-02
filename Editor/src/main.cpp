@@ -24,10 +24,9 @@
 Screen coordinates will always being (0,0) in the bottom left and (SCREEN_WIDTH, SCREEN_HEIGHT) in top right
 */
 
-// TODO: add texture images to select from
+// TODO: place textures in world map
 
-key_state_t key_state;
-int debug_rectangle_render_handle = -1;
+int debug_bottom_left_world_grid_tex = -1;
 
 std::ostream& operator<< (std::ostream& stream, const ImVec2& vec) {
 	stream << "x: " << vec.x << " y: " << vec.y;
@@ -37,6 +36,7 @@ std::ostream& operator<< (std::ostream& stream, const ImVec2& vec) {
 int main(int argc, char** argv) {
 	application_t app;
 	mouse_state_t mouse_state;
+    key_state_t key_state;
 
 	init(app);
 
@@ -54,30 +54,28 @@ int main(int argc, char** argv) {
 	glm::vec3 hover_color(0, 1, 1);
 	int transform_handle = create_transform(glm::vec3(0.f), glm::vec3(1.f), 0.f);
 	transform_t& transform = *get_transform(transform_handle);
-	create_rectangle_render(transform_handle, hover_color, GRID_SQUARE_WIDTH, GRID_SQUARE_WIDTH, false);
+	create_rectangle_render(transform_handle, hover_color, -1, GRID_SQUARE_WIDTH, GRID_SQUARE_WIDTH, false, 0);
 
 	camera_t camera = create_camera();
 
-    // scroll offset for the world grid editor
+    // scroll offset for the world grid editor 
 	float x_offset = 0.f;
 
 	glm::vec3 selected_color(1,0,0);
 	int debug_transform_handle = create_transform(glm::vec3(0.f), glm::vec3(1.f), 0.f);
 	transform_t& debug_transform = *get_transform(debug_transform_handle);
-	debug_rectangle_render_handle = create_rectangle_render(debug_transform_handle, selected_color, 10, 10, false);
+	debug_bottom_left_world_grid_tex = create_rectangle_render(debug_transform_handle, selected_color, -1, 10, 10, false, 0);
 
-	// texture_t texture = create_texture("C:\\Sarthak\\projects\\Platformer\\Editor\\resources\\Legacy-Fantasy - High Forest 2.0\\Legacy-Fantasy - High Forest 2.3\\Assets\\Hive.png");
 	create_world_item("C:\\Sarthak\\projects\\Platformer\\Editor\\resources\\Legacy-Fantasy - High Forest 2.0\\Legacy-Fantasy - High Forest 2.3\\Assets\\Hive.png", 5, 5);
-	create_world_item("C:\\Sarthak\\projects\\Platformer\\Editor\\resources\\Legacy-Fantasy - High Forest 2.0\\Legacy-Fantasy - High Forest 2.3\\Assets\\Hive.png", 5, 5);
-	create_world_item("C:\\Sarthak\\projects\\Platformer\\Editor\\resources\\Legacy-Fantasy - High Forest 2.0\\Legacy-Fantasy - High Forest 2.3\\Assets\\Hive.png", 5, 5);
+	// create_world_item("C:\\Sarthak\\neo-buddy\\buddy.jpg", 5, 5);
+	// create_world_item("C:\\Sarthak\\projects\\Platformer\\Editor\\resources\\Legacy-Fantasy - High Forest 2.0\\Legacy-Fantasy - High Forest 2.3\\Assets\\Hive.png", 5, 5);
+	// create_world_item("C:\\Sarthak\\projects\\Platformer\\Editor\\resources\\Legacy-Fantasy - High Forest 2.0\\Legacy-Fantasy - High Forest 2.3\\Assets\\Hive.png", 5, 5);
 
-	texture_t tex = create_texture("C:\\Sarthak\\projects\\Platformer\\Editor\\resources\\Legacy-Fantasy - High Forest 2.0\\Legacy-Fantasy - High Forest 2.3\\Character\\Idle\\Idle-Sheet.png");
+	// texture_t tex = create_texture("C:\\Sarthak\\projects\\Platformer\\Editor\\resources\\Legacy-Fantasy - High Forest 2.0\\Legacy-Fantasy - High Forest 2.3\\Character\\Idle\\Idle-Sheet.png");
 
 	ImGui::FileBrowser file_browser;
 	file_browser.SetTitle("File Browser");
 	file_browser.SetTypeFilters({".png", ".jpg", ".JPG", ".jpeg", ".JPEG"});
-
-	// ImVec2 top_left_screen_pos{};
 
 	while (app.running) {
 
@@ -109,7 +107,6 @@ int main(int argc, char** argv) {
 		ImGui::Begin("DockSpace Demo", &open, window_flags);
 		if (io.ConfigFlags & ImGuiConfigFlags_DockingEnable)
 		{
-			// std::cout << "dockspace ImGui::GetWindowPos(): " << ImGui::GetWindowPos() << std::endl;
 			ImGuiDockNodeFlags dockspace_flags = ImGuiDockNodeFlags_None;
 			ImGuiID dockspace_id = ImGui::GetID("DockSpace");
 			ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspace_flags);
@@ -123,9 +120,6 @@ int main(int argc, char** argv) {
 		// ImGui::ShowDemoWindow();
 
 		if (ImGui::BeginMainMenuBar()) {
-			// std::cout << "main menu ImGui::GetWindowPos(): " << ImGui::GetWindowPos() << std::endl;
-			// top_left_screen_pos = ImGui::GetWindowPos();
-			// top_left_screen_pos.y += WINDOW_HEIGHT;
 			conversion::set_window_top_left_screen_coord();
 
 			if (ImGui::BeginMenu("File")) {
@@ -172,23 +166,9 @@ int main(int argc, char** argv) {
 				ImVec2 region_min = ImGui::GetWindowContentRegionMin();
 				ImVec2 region_max = ImGui::GetWindowContentRegionMax();
 
-				// ImVec2 top_left_window = ImGui::GetWindowPos();
 				ImVec2 top_left_window = conversion::get_window_pos();
-				
-				// std::cout << "top_left_window: " << top_left_window << std::endl;
-				// win_rel_mouse.x = mouse_state.x
 
-				// std::cout << "GetWindowContentRegionMin: " << ImGui::GetWindowContentRegionMin() << std::endl;
-				// std::cout << "GetWindowContentRegionMax: " << ImGui::GetWindowContentRegionMax() << std::endl;
-				// std::cout << "ImGui::GetWindowPos(): " << ImGui::GetWindowPos() << std::endl;
-				// std::cout << "io DisplaySize: " << io.DisplaySize << std::endl;
-				// std::cout << "io.DisplayFramebufferScale: " << io.DisplayFramebufferScale << std::endl;
-
-				// ImVec2 min_region = ImGui::GetWindowContentRegionMin();
-				// ImVec2 win_pos = ImGui::GetWindowPos();
-				// std::cout << ImVec2(mouse_state.x - win_pos.x, mouse_state.y - win_pos.y) << std::endl;
-
-                // position of the actual world grid fbo texture bottom right
+			    // position of the actual world grid fbo texture bottom right
 				ImVec2 bottom_left_world_grid_tex_pos;
 				bottom_left_world_grid_tex_pos.x = top_left_window.x;
 				bottom_left_world_grid_tex_pos.y = top_left_window.y - tex_height - WINDOW_TITLE_BAR_HEIGHT;
@@ -202,15 +182,10 @@ int main(int argc, char** argv) {
 				mouse_pos_rel_tex.x = mouse_state.x - bottom_left_world_grid_tex_pos.x;
 				mouse_pos_rel_tex.y = mouse_state.y - bottom_left_world_grid_tex_pos.y;
 
-				// std::cout << "mouse_pos_rel_tex: " << mouse_pos_rel_tex << std::endl;
-
 				glm::vec2 expanded_pos(mouse_pos_rel_tex.x / ratio, mouse_pos_rel_tex.y / ratio);
 
 				hovered_grid_square.x = floor((expanded_pos.x + x_offset) / GRID_SQUARE_WIDTH);
 				hovered_grid_square.y = floor(expanded_pos.y / GRID_SQUARE_WIDTH);	
-
-				// hovered_grid_square.x = floor((mouse_state.x + x_offset) / GRID_SQUARE_WIDTH);
-				// hovered_grid_square.y = floor(mouse_state.y / GRID_SQUARE_WIDTH);
 
                 // center pos of the hovered grid square
 				transform.position.x = hovered_grid_square.x * GRID_SQUARE_WIDTH + GRID_SQUARE_WIDTH / 2;
@@ -218,44 +193,17 @@ int main(int argc, char** argv) {
 
                 // if grid square gets selected
 				if (mouse_state.left_mouse_up) {
-					int transform_handle = create_transform(transform.position, transform.scale, transform.rotation_deg);
-					glm::vec3 color(0, 0, 1);
-					create_rectangle_render(transform_handle, color, GRID_SQUARE_WIDTH, GRID_SQUARE_WIDTH, false);
+					// int transform_handle = create_transform(transform.position, transform.scale, transform.rotation_deg);
+					// glm::vec3 color(0, 0, 1);
+					// create_rectangle_render(transform_handle, color, -1, GRID_SQUARE_WIDTH, GRID_SQUARE_WIDTH, false, 0);
+                    place_world_item(world_item_t::selected_world_item_handle, transform);
 				}
 			}
 			ImGui::End();
 		}
 		ImGui::PopStyleVar();
 
-		if (key_state.key_up[' ']) {
-			std::cout << "here" << std::endl;
-		}	
-
-		/*
-		if (ImGui::BeginPopupModal("Add World Item", NULL, ImGuiWindowFlags_AlwaysAutoResize)) {
-			if (ImGui::Button("Cancel")) {
-				ImGui::CloseCurrentPopup();
-			}
-			ImGui::EndPopup();
-		}
-		*/
-		// ImGui::Image((void*)texture.id, ImVec2(texture.width, texture.height));
-		/*
-		if (ImGui::BeginMainMenuBar())
-		{
-			if (ImGui::BeginMenu("Edit"))
-			{
-				if (ImGui::MenuItem("Add world item", "CTRL+A")) {
-
-				}
-				ImGui::Separator();
-				ImGui::EndMenu();
-			}
-			ImGui::EndMainMenuBar();
-		}
-		*/
-
-		render(app, camera, tex);
+		render(app, camera);
 		float end = platformer::get_time_since_start_in_sec();
 		platformer::time_t::delta_time = end - start;
 	}

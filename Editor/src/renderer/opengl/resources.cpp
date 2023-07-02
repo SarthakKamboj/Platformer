@@ -2,9 +2,13 @@
 #include "stb/stb_image.h"
 #include <iostream>
 #include "utils/io.h"
+#include <vector>
 
 // TEXTURE
-texture_t create_texture(const char* path) {
+
+static std::vector<texture_t> textures;
+
+int create_texture(const char* path) {
 	texture_t texture;
 
 	stbi_set_flip_vertically_on_load(true);
@@ -24,20 +28,30 @@ texture_t create_texture(const char* path) {
 
 	stbi_image_free(data);
 
-	return texture;
+    textures.push_back(texture);
+
+	return textures.size() - 1;
 }
 
 void bind_texture(const texture_t& texture) {
 	glBindTexture(GL_TEXTURE_2D, texture.id);
 }
 
-void bind_texture(int texture_id) {
+void bind_texture_by_handle(int texture_handle) {
+	glBindTexture(GL_TEXTURE_2D, textures[texture_handle].id);
+}
+
+void bind_texture_by_id(int texture_id) {
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, texture_id);
 }
 
 void unbind_texture() {
 	glBindTexture(GL_TEXTURE_2D, 0);
+}
+
+texture_t& get_texture(int texture_handle) {
+    return textures[texture_handle];
 }
 
 // SHADER
@@ -99,6 +113,12 @@ void shader_set_mat4(shader_t& shader, const char* var_name, const glm::mat4& ma
 	glUseProgram(shader.id);
 	unsigned int loc = glGetUniformLocation(shader.id, var_name);
 	glUniformMatrix4fv(loc, 1, GL_FALSE, glm::value_ptr(mat));
+}
+
+void shader_set_float(shader_t& shader, const char* var_name, const float val) {
+	glUseProgram(shader.id);
+	unsigned int loc = glGetUniformLocation(shader.id, var_name);
+	glUniform1f(loc, val);
 }
 
 void shader_set_int(shader_t& shader, const char* var_name, const int val) {
