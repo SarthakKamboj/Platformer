@@ -125,6 +125,9 @@ int main(int argc, char** argv) {
                 if (ImGui::MenuItem("Save World Items")) {
                     write_world_items_to_file();
                 }
+                if (ImGui::MenuItem("Save Level")) {
+                    write_world_map_to_file();
+                }
 				ImGui::EndMenu();
 			}
 			ImGui::EndMainMenuBar();

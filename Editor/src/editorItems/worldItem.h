@@ -27,3 +27,4 @@ void update_world_item_catalog();
 int place_world_item(int world_item_handle, const glm::vec2& bottom_left_grid_square_pos);
 placed_world_item_t* get_placed_world_item(int placed_handle);
 void remove_placed_world_item(glm::vec2 grid_square_pos);
+void write_world_map_to_file();

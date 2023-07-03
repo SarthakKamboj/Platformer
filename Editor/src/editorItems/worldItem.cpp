@@ -147,3 +147,23 @@ void remove_placed_world_item(glm::vec2 grid_square_pos) {
         }
     }
 }
+
+void write_world_map_to_file() {
+    std::ofstream out_file;
+	out_file.open("level1.txt");
+    if (out_file.is_open()) {
+        out_file << "WORLD_ITEMS" << std::endl;
+        for (world_item_t& world_item : world_items) {
+            texture_t& tex = *get_texture(world_item.texture_handle);
+            out_file << tex.path << WORLD_ITEM_TEXT_FILE_DELIM << std::to_string(world_item.grid_squares_width) << WORLD_ITEM_TEXT_FILE_DELIM << std::to_string(world_item.grid_squares_height) << "\n";
+        }
+
+        out_file << "\nPLACED_ITEMS" << std::endl;
+        for (placed_world_item_t& placed_item : placed_items) {
+            out_file << placed_item.world_item_handle << WORLD_ITEM_TEXT_FILE_DELIM << placed_item.bottom_left_grid_square_pos.x << WORLD_ITEM_TEXT_FILE_DELIM << placed_item.bottom_left_grid_square_pos.y << "\n";
+        }
+        out_file.close();
+    } else {
+        throw std::runtime_error("could not open world items file");
+    }
+}

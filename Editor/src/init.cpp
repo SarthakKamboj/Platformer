@@ -179,6 +179,41 @@ void init_world_items() {
     }
 }
 
+void init_placed_world_items() {
+    std::fstream file;
+    file.open("C:\\Sarthak\\projects\\Platformer\\Editor\\level1.txt");
+	size_t delim_len = std::string(WORLD_ITEM_TEXT_FILE_DELIM).size();
+    if (file.is_open()) {
+        bool placed_items_section = false;
+        while (!file.eof()) {
+            std::string item_info;
+            std::getline(file, item_info);
+            if (!placed_items_section && item_info != "PLACED_ITEMS") {
+                continue;
+            }
+            if (item_info == "PLACED_ITEMS") {
+                placed_items_section = true;
+                continue;
+            }
+			if (item_info == "" && placed_items_section) {
+				break;
+			}
+            int start = 0;
+            int first_delim_idx = item_info.find(WORLD_ITEM_TEXT_FILE_DELIM, start);
+            int second_delim_idx = item_info.find(WORLD_ITEM_TEXT_FILE_DELIM, first_delim_idx + 1);
+            std::string world_item_handle_str = item_info.substr(start, first_delim_idx);
+            std::string width_str = item_info.substr(first_delim_idx + delim_len, second_delim_idx - (first_delim_idx + delim_len));
+            std::string height_str = item_info.substr(second_delim_idx + delim_len);
+            
+            glm::vec2 grid_pos(std::stoi(width_str), std::stoi(height_str));
+            place_world_item(std::stoi(world_item_handle_str), grid_pos);
+        }
+        file.close();
+    } else {
+        std::cout << "could not open world items file" << std::endl;
+    }
+}
+
 void init(application_t& app) {
 	init_sdl(app);
 	app.running = true;
@@ -187,6 +222,7 @@ void init(application_t& app) {
 	init_fbo_draw_data(app);
 	app.world_grid_fbo = create_framebuffer();
     init_world_items();
+    init_placed_world_items();
 
 	// int transform_handle = create_transform(glm::vec3(400, 400, 0), glm::vec3(0), 0);
 	// glm::vec3 color(1, 0, 0);
