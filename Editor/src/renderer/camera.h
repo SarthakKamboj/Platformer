@@ -5,7 +5,6 @@
 
 struct camera_t {
 	int transform_handle = -1;
-	transform_t* transform = nullptr;
 	glm::vec3 look_at;
 };
 
