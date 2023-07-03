@@ -3,6 +3,9 @@
 #include "../renderer.h"
 #include "transform/transform.h"
 #include <vector>
+#include <glm/gtx/string_cast.hpp>
+#include <iostream>
+#include "input/input.h"
 
 opengl_object_data rectangle_render_t::obj_data{};
 
@@ -36,7 +39,9 @@ rectangle_render_t* get_rectangle_render(int rec_render_handle) {
 }
 
 void remove_rectangle_render(int rec_render_handle) {
-    rectangle_render_t& rec_render = *get_rectangle_render(rec_render_handle);
+    rectangle_render_t* rec_render_ptr = get_rectangle_render(rec_render_handle);
+    assert(rec_render_ptr != NULL);
+    rectangle_render_t& rec_render = *rec_render_ptr;
     remove_transform(rec_render.transform_handle);
     int idx_to_remove = -1;
     for (int i = 0; i < rectangles.size(); i++) {
@@ -82,7 +87,8 @@ void draw_rectangle_render(int rectangle_handle) {
 }
 
 void draw_rectangle_renders(camera_t& camera) {
-	shader_set_mat4(rectangle_render_t::obj_data.shader, "view", get_view_matrix(camera));
+    glm::mat4 view_matrix = get_view_matrix(camera);
+	shader_set_mat4(rectangle_render_t::obj_data.shader, "view", view_matrix);
 	for (const rectangle_render_t& rectangle : rectangles) {
 		draw_rectangle_render(rectangle);
 	}
