@@ -27,11 +27,13 @@ int create_world_item(const char* path, int squares_width, int squares_height) {
 	return world_item.handle;
 }
 
-void write_world_item_to_file(world_item_t& world_item) {
+void write_world_items_to_file() {
     std::ofstream out_file;
-	out_file.open("world_items.txt", std::ios_base::app);
-    texture_t& tex = *get_texture(world_item.texture_handle);
-	out_file << tex.path << WORLD_ITEM_TEXT_FILE_DELIM << std::to_string(world_item.grid_squares_width) << WORLD_ITEM_TEXT_FILE_DELIM << std::to_string(world_item.grid_squares_height) << "\n";
+	out_file.open("world_items.txt");
+    for (world_item_t& world_item : world_items) {
+        texture_t& tex = *get_texture(world_item.texture_handle);
+        out_file << tex.path << WORLD_ITEM_TEXT_FILE_DELIM << std::to_string(world_item.grid_squares_width) << WORLD_ITEM_TEXT_FILE_DELIM << std::to_string(world_item.grid_squares_height) << "\n";
+    }
     out_file.close();
 }
 
@@ -86,7 +88,7 @@ int place_world_item(int world_item_handle, const glm::vec2& bottom_left_grid_sq
         if (placed_item.world_item_handle == world_item_handle && 
            placed_item.bottom_left_grid_square_pos == bottom_left_grid_square_pos ) {
             return -1;
-           }
+        }
     }
 
     static int running_count = 0;

@@ -20,7 +20,7 @@ struct placed_world_item_t {
 };
 
 int create_world_item(const char* path, int squares_width, int squares_height);
-void write_world_item_to_file(world_item_t& world_item);
+void write_world_items_to_file();
 world_item_t* get_world_item(int world_handle);
 void update_world_item_catalog();
 // pass in the world item handle and the top left grid square
