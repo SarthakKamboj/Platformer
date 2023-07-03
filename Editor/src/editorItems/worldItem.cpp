@@ -74,7 +74,6 @@ void update_world_item_catalog() {
 		if (world_item_t::selected_world_item_handle != i) {
             bool clicked_on_select = ImGui::Button("Select Item");
             if (clicked_on_select) {
-                std::cout << "clicked on " << item.texture_handle << std::endl;
                 world_item_t::selected_world_item_handle = i;
             }
         } else {

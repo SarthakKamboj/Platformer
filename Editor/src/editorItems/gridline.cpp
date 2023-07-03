@@ -22,6 +22,3 @@ void create_gridline(float x, float y, dir_t dir) {
 	gridlines.push_back(gridline);
 }
 
-void draw_gridlines() {
-	
-}
