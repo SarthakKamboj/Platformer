@@ -66,7 +66,8 @@ void update_world_item_catalog() {
         assert(tex_ptr != NULL);
 		texture_t& texture = *tex_ptr;
         float ratio = 50.f / texture.height;
-		ImGui::Image((void*)texture.id, ImVec2(texture.width * ratio, texture.height * ratio));
+        // ? uv0 = top left uv coordinate and uv1 = bottom right uv coordinate
+		ImGui::Image((void*)texture.id, ImVec2(texture.width * ratio, texture.height * ratio), ImVec2(0,1), ImVec2(1,0));
         std::string width_text = "Width: " + std::to_string(item.grid_squares_width);
         ImGui::Text(width_text.c_str());
         std::string height_text = "Height: " + std::to_string(item.grid_squares_height);
