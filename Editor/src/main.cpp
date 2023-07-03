@@ -66,14 +66,6 @@ int main(int argc, char** argv) {
 	int debug_transform_handle = create_transform(glm::vec3(0.f), glm::vec3(1.f), 0.f);
 	debug_bottom_left_world_grid_tex = create_rectangle_render(debug_transform_handle, selected_color, -1, 10, 10, false, 0);
 
-	// create_world_item("C:\\Sarthak\\projects\\Platformer\\Editor\\resources\\Legacy-Fantasy - High Forest 2.0\\Legacy-Fantasy - High Forest 2.3\\Assets\\Hive.png", 5, 5);
-	// create_world_item("C:\\Sarthak\\neo-buddy\\buddy.jpg", 5, 5);
-	// create_world_item("C:\\Sarthak\\projects\\Platformer\\Editor\\resources\\Legacy-Fantasy - High Forest 2.0\\Legacy-Fantasy - High Forest 2.3\\Assets\\Hive.png", 5, 5);
-	// create_world_item("C:\\Sarthak\\neo-buddy\\buddy.jpg", 5, 5);
-	// create_world_item("C:\\Sarthak\\projects\\Platformer\\Editor\\resources\\Legacy-Fantasy - High Forest 2.0\\Legacy-Fantasy - High Forest 2.3\\Assets\\Hive.png", 5, 5);
-
-	// texture_t tex = create_texture("C:\\Sarthak\\projects\\Platformer\\Editor\\resources\\Legacy-Fantasy - High Forest 2.0\\Legacy-Fantasy - High Forest 2.3\\Character\\Idle\\Idle-Sheet.png");
-
 	ImGui::FileBrowser file_browser;
 	file_browser.SetTitle("File Browser");
 	file_browser.SetTypeFilters({".png", ".jpg", ".JPG", ".jpeg", ".JPEG"});
@@ -202,8 +194,8 @@ int main(int argc, char** argv) {
                     place_world_item(world_item_t::selected_world_item_handle, hovered_grid_square);
 				}
 
-				// remove on right mouse click
-                if (mouse_state.right_mouse_up) {
+				// remove on right mouse press
+                if (mouse_state.right_mouse_being_pressed) {
                     remove_placed_world_item(hovered_grid_square);
                 }
 			}
