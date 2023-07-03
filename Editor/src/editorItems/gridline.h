@@ -14,4 +14,3 @@ struct gridline_t {
 };
 
 void create_gridline(float x, float y, dir_t dir);
-void draw_gridlines();
