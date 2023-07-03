@@ -9,11 +9,15 @@
 static std::vector<texture_t> textures;
 
 int create_texture(const char* path) {
+    assert(path != NULL);
+
     static int running_count = 0;
 	texture_t texture;
 
 	stbi_set_flip_vertically_on_load(true);
 	unsigned char* data = stbi_load(path, &texture.width, &texture.height, &texture.num_channels, 0);
+
+    assert(data != NULL);
 
 	glGenTextures(1, &texture.id);
 	glBindTexture(GL_TEXTURE_2D, texture.id);

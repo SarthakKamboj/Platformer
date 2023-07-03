@@ -31,6 +31,7 @@ void delete_vbo(const vbo_t& vbo) {
 
 // EBO
 ebo_t create_ebo(const unsigned int* indicies, const int size_of_buffer) {
+    assert(indicies != NULL);
 	ebo_t ebo;
 	ebo.num_indicies = size_of_buffer / sizeof(indicies[0]);
 	glGenBuffers(1, &ebo.id);
@@ -41,6 +42,7 @@ ebo_t create_ebo(const unsigned int* indicies, const int size_of_buffer) {
 }
 
 ebo_t create_ebo(const unsigned int* indicies, const int size_of_buffer, GLenum usage_pattern) {
+    assert(indicies != NULL);
 	ebo_t ebo;
 	ebo.num_indicies = size_of_buffer / sizeof(indicies[0]);
 	glGenBuffers(1, &ebo.id);

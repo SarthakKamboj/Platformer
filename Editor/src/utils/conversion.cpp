@@ -4,15 +4,21 @@
 
 namespace conversion {
 	glm::vec2 ndc_coord_to_window_coord(const glm::vec2& ndc_coord) {
+        assert(ndc_coord.x >= -1.f && ndc_coord.x <= 1.f);
+        assert(ndc_coord.y >= -1.f && ndc_coord.y <= 1.f);
 		glm::vec2 ndc_0_to_1 = (ndc_coord + 1.0f) * 0.5f;
 		return ndc_0_to_1 * glm::vec2(WINDOW_WIDTH, WINDOW_HEIGHT);
 	}
 
 	glm::vec2 ndc_size_to_window_size(const glm::vec2& ndc_size) {
+        assert(ndc_size.x >= 0 && ndc_size.x <= 2.f);
+        assert(ndc_size.y >= 0 && ndc_size.y <= 2.f);
 		return ndc_size * (glm::vec2(WINDOW_WIDTH, WINDOW_HEIGHT) / 2.f);
 	}
 
 	glm::vec2 window_coord_to_ndc_coord(const glm::vec2& screen_coord) {
+        assert(screen_coord.x >= 0 && screen_coord.x <= WINDOW_WIDTH);
+        assert(screen_coord.y >= 0 && screen_coord.y <= WINDOW_HEIGHT);
 		glm::vec2 normalized_screen = screen_coord / glm::vec2(WINDOW_WIDTH, WINDOW_HEIGHT);
 		glm::vec2 ndc = (normalized_screen * 2.0f) - 1.0f;
 		return glm::vec2(ndc.x, ndc.y);

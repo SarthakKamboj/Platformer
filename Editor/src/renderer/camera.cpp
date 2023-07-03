@@ -14,6 +14,7 @@ camera_t create_camera() {
 
 void update_camera(camera_t& camera, key_state_t& key_state) {
 	transform_t* transform = get_transform(camera.transform_handle);
+    assert(transform != NULL);
 	if (key_state.key_being_pressed['d']) {
 		transform->position.x += CAMERA_SCROLL_SPEED * platformer::time_t::delta_time;
 	} else if (key_state.key_being_pressed['a']) {
@@ -21,14 +22,11 @@ void update_camera(camera_t& camera, key_state_t& key_state) {
 	} 
 }
 
-extern key_state_t key_state;
 glm::mat4 get_view_matrix(camera_t& camera) {
 	transform_t* transform = get_transform(camera.transform_handle);
+    assert(transform != NULL);
 	glm::mat4 view(1.0f);
 	glm::vec3 translate(-transform->position.x + (WINDOW_WIDTH/2), -transform->position.y + (WINDOW_HEIGHT/2), 0.f);
-    if (key_state.key_down[' ']) {
-        std::cout << "camera position: " << glm::to_string(transform->position) << std::endl;
-    }
 	view = glm::translate(view, translate); 
 	return view;
 }

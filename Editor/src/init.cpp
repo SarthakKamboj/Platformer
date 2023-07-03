@@ -169,6 +169,8 @@ void init_world_items() {
             create_world_item(path.c_str(), std::stoi(num_width_str), std::stoi(num_height_str));
         }
         file.close();
+    } else {
+        std::cout << "could not open world items file" << std::endl;
     }
 }
 

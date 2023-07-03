@@ -56,7 +56,9 @@ void remove_rectangle_render(int rec_render_handle) {
 }
 
 void draw_rectangle_render(const rectangle_render_t& rectangle) {
-	transform_t cur_transform = *get_transform(rectangle.transform_handle);
+    transform_t* cur_transform_ptr = get_transform(rectangle.transform_handle);
+    assert(cur_transform_ptr != NULL);
+	transform_t cur_transform = *cur_transform_ptr;
 	cur_transform.position += rectangle._internal_transform.position;
 	cur_transform.rotation_deg += rectangle._internal_transform.rotation_deg;
 	cur_transform.scale *= rectangle._internal_transform.scale;

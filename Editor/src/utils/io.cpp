@@ -1,10 +1,13 @@
 #include "io.h"
 #include <fstream>
 #include <iostream>
+#include <cassert>
 
 namespace io {
 	std::string get_file_contents(const char* path) {
+        assert(path != NULL);
 		std::ifstream file(path, std::ios::binary);
+        assert(file.is_open());
 		file.seekg(0, file.end);
 		int size = file.tellg();
 		file.seekg(0, file.beg);

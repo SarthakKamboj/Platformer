@@ -8,6 +8,7 @@
 #include "renderer/basic/shape_renders.h"
 #include "constants.h"
 #include "input/input.h"
+#include <stdexcept>
 
 std::vector<world_item_t> world_items;
 std::vector<placed_world_item_t> placed_items;
@@ -30,11 +31,15 @@ int create_world_item(const char* path, int squares_width, int squares_height) {
 void write_world_items_to_file() {
     std::ofstream out_file;
 	out_file.open("world_items.txt");
-    for (world_item_t& world_item : world_items) {
-        texture_t& tex = *get_texture(world_item.texture_handle);
-        out_file << tex.path << WORLD_ITEM_TEXT_FILE_DELIM << std::to_string(world_item.grid_squares_width) << WORLD_ITEM_TEXT_FILE_DELIM << std::to_string(world_item.grid_squares_height) << "\n";
+    if (out_file.is_open()) {
+        for (world_item_t& world_item : world_items) {
+            texture_t& tex = *get_texture(world_item.texture_handle);
+            out_file << tex.path << WORLD_ITEM_TEXT_FILE_DELIM << std::to_string(world_item.grid_squares_width) << WORLD_ITEM_TEXT_FILE_DELIM << std::to_string(world_item.grid_squares_height) << "\n";
+        }
+        out_file.close();
+    } else {
+        throw std::runtime_error("could not open world items file");
     }
-    out_file.close();
 }
 
 world_item_t* get_world_item(int world_handle) {
@@ -57,7 +62,9 @@ void update_world_item_catalog() {
         // https://github.com/ocornut/imgui/issues/74
         ImGui::PushID(i);
 		world_item_t& item = world_items[i];
-		texture_t& texture = *get_texture(item.texture_handle);
+        texture_t* tex_ptr = get_texture(item.texture_handle);
+        assert(tex_ptr != NULL);
+		texture_t& texture = *tex_ptr;
         float ratio = 50.f / texture.height;
 		ImGui::Image((void*)texture.id, ImVec2(texture.width * ratio, texture.height * ratio));
         std::string width_text = "Width: " + std::to_string(item.grid_squares_width);
@@ -99,7 +106,9 @@ int place_world_item(int world_item_handle, const glm::vec2& bottom_left_grid_sq
     placed_world_item.handle = running_count;
     running_count++;
 
-    world_item_t& world_item = *get_world_item(world_item_handle);
+    world_item_t* world_item_ptr = get_world_item(world_item_handle);
+    assert(world_item_ptr != NULL);
+    world_item_t& world_item = *world_item_ptr;
     glm::vec2 center_grid_square;
     center_grid_square.x = bottom_left_grid_square_pos.x + (world_item.grid_squares_width / 2.f);
     center_grid_square.y = bottom_left_grid_square_pos.y + (world_item.grid_squares_height / 2.f);
