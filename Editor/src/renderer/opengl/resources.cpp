@@ -11,6 +11,12 @@ static std::vector<texture_t> textures;
 int create_texture(const char* path) {
     assert(path != NULL);
 
+    for (texture_t& texture : textures) {
+        if (texture.path == std::string(path)) {
+            return texture.handle;
+        }
+    }
+
     static int running_count = 0;
 	texture_t texture;
 

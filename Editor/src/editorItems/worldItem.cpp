@@ -9,6 +9,7 @@
 #include "constants.h"
 #include "input/input.h"
 #include <stdexcept>
+#include <map>
 
 std::vector<world_item_t> world_items;
 std::vector<placed_world_item_t> placed_items;
@@ -16,6 +17,12 @@ std::vector<placed_world_item_t> placed_items;
 int world_item_t::selected_world_item_handle = -1;
 
 int create_world_item(const char* path, int squares_width, int squares_height) {
+ 
+    int existing_handle = get_world_item_handle(path, squares_width, squares_height);
+    if (existing_handle != -1) {
+        return existing_handle;
+    }
+
     static int running_count = 0;
 	world_item_t world_item;
 	world_item.texture_handle = create_texture(path);
@@ -26,6 +33,19 @@ int create_world_item(const char* path, int squares_width, int squares_height) {
     running_count++;
     world_item_t::selected_world_item_handle = world_item.handle;
 	return world_item.handle;
+}
+
+int get_world_item_handle(const char* path, int squares_width, int squares_height) {
+    for (world_item_t& world_item : world_items) {
+        texture_t* ptr = get_texture(world_item.texture_handle);
+        assert(ptr != NULL);
+        texture_t& texture = *ptr;
+        if (texture.path == std::string(path) && squares_width == world_item.grid_squares_width
+            && squares_height == world_item.grid_squares_height) {
+            return world_item.handle;
+        }
+    }
+    return -1;
 }
 
 void write_world_items_to_file() {
@@ -148,19 +168,25 @@ void remove_placed_world_item(glm::vec2 grid_square_pos) {
     }
 }
 
+// TODO: remove use of world item handles since those may change with the application
 void write_world_map_to_file() {
     std::ofstream out_file;
 	out_file.open("level1.txt");
+    std::map<int, int> handle_to_idx_map;
     if (out_file.is_open()) {
         out_file << "WORLD_ITEMS" << std::endl;
-        for (world_item_t& world_item : world_items) {
-            texture_t& tex = *get_texture(world_item.texture_handle);
+        for (int i = 0; i < world_items.size(); i++) {
+            world_item_t& world_item = world_items[i];
+            texture_t* ptr = get_texture(world_item.texture_handle);
+            assert(ptr != NULL);
+            texture_t& tex = *ptr;
             out_file << tex.path << WORLD_ITEM_TEXT_FILE_DELIM << std::to_string(world_item.grid_squares_width) << WORLD_ITEM_TEXT_FILE_DELIM << std::to_string(world_item.grid_squares_height) << "\n";
+            handle_to_idx_map[world_item.handle] = i;
         }
 
         out_file << "\nPLACED_ITEMS" << std::endl;
         for (placed_world_item_t& placed_item : placed_items) {
-            out_file << placed_item.world_item_handle << WORLD_ITEM_TEXT_FILE_DELIM << placed_item.bottom_left_grid_square_pos.x << WORLD_ITEM_TEXT_FILE_DELIM << placed_item.bottom_left_grid_square_pos.y << "\n";
+            out_file << handle_to_idx_map[placed_item.world_item_handle] << WORLD_ITEM_TEXT_FILE_DELIM << placed_item.bottom_left_grid_square_pos.x << WORLD_ITEM_TEXT_FILE_DELIM << placed_item.bottom_left_grid_square_pos.y << "\n";
         }
         out_file.close();
     } else {

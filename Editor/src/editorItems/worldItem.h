@@ -22,6 +22,7 @@ struct placed_world_item_t {
 int create_world_item(const char* path, int squares_width, int squares_height);
 void write_world_items_to_file();
 world_item_t* get_world_item(int world_handle);
+int get_world_item_handle(const char* path, int squares_width, int squares_height);
 void update_world_item_catalog();
 // pass in the world item handle and the bottom left grid square
 int place_world_item(int world_item_handle, const glm::vec2& bottom_left_grid_square_pos);
