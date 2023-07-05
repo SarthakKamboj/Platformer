@@ -14,7 +14,7 @@
 std::vector<world_item_t> world_items;
 std::vector<placed_world_item_t> placed_items;
 
-int world_item_t::selected_world_item_handle = -1;
+int world_item_t::selected_world_item_handle = world_item_t::NONE_SELECTED;
 
 int create_world_item(const char* path, int squares_width, int squares_height) {
  
@@ -71,11 +71,37 @@ world_item_t* get_world_item(int world_handle) {
 	return NULL;
 }
 
+void remove_world_item(int world_handle) {
+    int idx_to_remove = -1;
+    for (int i = 0; i < world_items.size(); i++) {
+        if (world_items[i].handle == world_handle) {
+            idx_to_remove = i;
+            break;
+        }
+    }
+
+    assert(idx_to_remove != -1);
+
+    for (int i = 0; i < placed_items.size(); i++) {
+        if (placed_items[i].world_item_handle == world_handle) {
+            remove_placed_world_item(placed_items[i].handle);
+            i--;
+        }
+    }
+
+    world_items.erase(world_items.begin() + idx_to_remove, world_items.begin() + idx_to_remove + 1);
+    if (world_item_t::selected_world_item_handle == world_handle) {
+        world_item_t::selected_world_item_handle = world_item_t::NONE_SELECTED;
+    }
+}
+
 extern mouse_state_t mouse_state;
 
 void update_world_item_catalog() {
     const float image_height = 50.f;
 	ImGui::Begin("World Items");
+    std::string select_handle_text = "Selected Handle: " + std::to_string(world_item_t::selected_world_item_handle);
+    ImGui::Text(select_handle_text.c_str());
 	for (int i = 0; i < world_items.size(); i++) {
         // push id because the titles are used as IDs and if within the same window, multiple items have the same id, it can cause issues
         // push id helps solve that by ensuring unique ids
@@ -92,22 +118,26 @@ void update_world_item_catalog() {
         ImGui::Text(width_text.c_str());
         std::string height_text = "Height: " + std::to_string(item.grid_squares_height);
         ImGui::Text(height_text.c_str());
+        std::string handle_text = "Handle: " + std::to_string(item.handle);
+        ImGui::Text(handle_text.c_str());
 		if (world_item_t::selected_world_item_handle != i) {
             bool clicked_on_select = ImGui::Button("Select Item");
             if (clicked_on_select) {
-                world_item_t::selected_world_item_handle = i;
+                world_item_t::selected_world_item_handle = item.handle;
             }
         } else {
             ImGui::Button("Currently Selected");
         } 
+        if (ImGui::Button("Remove World Item")) {
+            remove_world_item(item.handle);
+        }
         ImGui::PopID();
 	}
 	ImGui::End();
 }
 
 int place_world_item(int world_item_handle, const glm::vec2& bottom_left_grid_square_pos) {
-    if (world_item_handle < 0) {
-        std::cout << "could not place item since nothing was selected" << std::endl;
+    if (world_item_handle == world_item_t::NONE_SELECTED) {
         return -1;
     }
 
@@ -166,6 +196,18 @@ void remove_placed_world_item(glm::vec2 grid_square_pos) {
             i--;
         }
     }
+}
+
+void remove_placed_world_item(int placed_handle) {
+    int idx_to_remove = 0;
+    for (int i = 0; i < placed_items.size(); i++) {
+        const placed_world_item_t& placed_item = placed_items[i];
+        if (placed_item.handle == placed_handle) {
+            remove_rectangle_render(placed_item.rec_render_handle);
+            idx_to_remove = i;
+        }
+    }
+    placed_items.erase(placed_items.begin() + idx_to_remove, placed_items.begin() + idx_to_remove + 1);
 }
 
 // TODO: remove use of world item handles since those may change with the application

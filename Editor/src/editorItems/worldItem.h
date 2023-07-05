@@ -10,6 +10,7 @@ struct world_item_t {
 	int grid_squares_height = -1;
 
     static int selected_world_item_handle;
+    const static int NONE_SELECTED = -1;
 };
 
 struct placed_world_item_t {
@@ -24,8 +25,10 @@ void write_world_items_to_file();
 world_item_t* get_world_item(int world_handle);
 int get_world_item_handle(const char* path, int squares_width, int squares_height);
 void update_world_item_catalog();
+void remove_world_item(int world_handle);
 // pass in the world item handle and the bottom left grid square
 int place_world_item(int world_item_handle, const glm::vec2& bottom_left_grid_square_pos);
 placed_world_item_t* get_placed_world_item(int placed_handle);
 void remove_placed_world_item(glm::vec2 grid_square_pos);
+void remove_placed_world_item(int placed_handle);
 void write_world_map_to_file();
