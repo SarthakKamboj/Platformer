@@ -1,0 +1,10 @@
+{
+    "files.associations": {
+        "cmath": "cpp",
+        "filesystem": "cpp",
+        "xlocinfo": "cpp",
+        "xstring": "cpp",
+        "string": "cpp",
+        "iosfwd": "cpp"
+    }
+}

@@ -1,4 +1,17 @@
+HIGHEST IMPORTANCE
+- see what tiles are at a particular location especially when there are multiple in one place
+- make removing tiles easier and ensure they actually fit on the map
+- maybe add z layering for the tiles
+- make the tiles selectable
+- refactor the code to be cleaner (look into other projects as well to see how editors are organized)
+    - possibly look into how godot engine does its editor ui
+
 - add imgui - done
-- add image loading and selection
-- add paths for the level files to be stored
-- serialize level data into some sort of file
+- add image loading and selection - done
+- fix grid tex going blank issue - done
+- removed certain tiles cause issues - done
+- add assertions and ensure things are tested properly - done
+- fix image displays - done
+- serialize level data into some sort of file - done
+- read level data from file - done
+- remove world items - done
