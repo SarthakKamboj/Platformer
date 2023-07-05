@@ -120,5 +120,5 @@ void process_input(mouse_state_t& mouse_state, key_state_t& key_state, SDL_Windo
 	int sdl_mouse_x, sdl_mouse_y;
 	SDL_GetMouseState(&sdl_mouse_x, &sdl_mouse_y);
 	mouse_state.x = sdl_mouse_x;
-	mouse_state.y = SCREEN_HEIGHT - sdl_mouse_y;
+	mouse_state.y = WINDOW_HEIGHT - sdl_mouse_y;
 }

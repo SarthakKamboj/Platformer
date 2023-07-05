@@ -23,7 +23,7 @@ int main(int argc, char** argv) {
 	init(app);
 
 	glm::vec3 rec_color = glm::vec3(0, 1, 1);
-	main_character_t mc = create_main_character(glm::vec3(SCREEN_WIDTH/2, SCREEN_HEIGHT/2, 0.f), glm::vec3(1.f), 0.f, rec_color, glm::vec2(50, 100));
+	main_character_t mc = create_main_character(glm::vec3(WINDOW_WIDTH/2, WINDOW_HEIGHT/2, 0.f), glm::vec3(1.f), 0.f, rec_color, glm::vec2(50, 100));
 	const int NUM_BLOCKS = 15;
 	ground_block_t blocks[NUM_BLOCKS + 2];
 	for (int i = 0; i < NUM_BLOCKS; i++) {
