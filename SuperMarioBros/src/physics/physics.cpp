@@ -9,10 +9,14 @@
 std::vector<rigidbody_t> rigidbodies;
 
 int create_rigidbody(int transform_handle, bool use_gravity, float collider_width, float collider_height, bool is_kinematic) {
+    static int running_count = 0; 
+
 	rigidbody_t rigidbody;
 	rigidbody.use_gravity = use_gravity;
 	rigidbody.transform_handle = transform_handle;
 	rigidbody.is_kinematic = is_kinematic;
+    rigidbody.handle = running_count;
+    running_count++;
 	transform_t& transform = *get_transform(transform_handle);
 
 	aabb_collider_t aabb_collider;
@@ -29,7 +33,7 @@ int create_rigidbody(int transform_handle, bool use_gravity, float collider_widt
 	rigidbody.aabb_collider = aabb_collider;
 
 	rigidbodies.push_back(rigidbody);
-	return rigidbodies.size() - 1;
+	return rigidbody.handle;
 }
 
 void handle_position(rigidbody_t& kinematic_rb, rigidbody_t& non_kinematic_rb, PHYSICS_COLLISION_DIR col_dir) {
@@ -61,7 +65,6 @@ void handle_collision(rigidbody_t& rb1, rigidbody_t& rb2) {
 	aabb_collider_t& collider_1 = rb1.aabb_collider;
 	aabb_collider_t& collider_2 = rb2.aabb_collider;
 
-	collision_info_t col_info;
 	float col_1_right = collider_1.x + collider_1.width / 2;
 	float col_1_left = collider_1.x - collider_1.width / 2;
 	float col_1_top = collider_1.y + collider_1.height / 2;
@@ -109,6 +112,7 @@ void handle_collision(rigidbody_t& rb1, rigidbody_t& rb2) {
 		return;
 	}
 
+	collision_info_t col_info;
 	col_info.is_colliding = true;
 	col_info.dir = VERTICAL;
 
@@ -120,7 +124,9 @@ void handle_collision(rigidbody_t& rb1, rigidbody_t& rb2) {
 
 	bool overlap_on_x = fmin(overlap_from_col1_x, overlap_from_col2_x) < MAX_HORIZONTAL_COL_OFFSET_PIXELS;
 
-	if (overlap_on_x && fmin(overlap_from_col1_y, overlap_from_col2_y) > 3.5f) {
+    // the overlap in y direction is too much to be considered vertical collision, 
+    // rather the 2 rigidbodies are adjacent to each other
+	if (overlap_on_x && fmin(overlap_from_col1_y, overlap_from_col2_y) > MAX_PIXELS_OVERLAP_FOR_VERT_COL) {
 		col_info.dir = HORIZONTAL;
 	}
 
@@ -148,6 +154,7 @@ void handle_collision(rigidbody_t& rb1, rigidbody_t& rb2) {
 
 void update_rigidbodies() {	
 
+    // apply gravity
 	for (rigidbody_t& rb : rigidbodies) {
 		transform_t& transform = *get_transform(rb.transform_handle);
 		if (rb.use_gravity) {
@@ -155,6 +162,8 @@ void update_rigidbodies() {
 		}
 	}
 
+    // deal with collision from multiple rigidbodies
+    // TODO: look into quadtree algorithm to optimize collision detection
 	for (int i = 0; i < rigidbodies.size(); i++) {
 		for (int j = i + 1; j < rigidbodies.size(); j++) {
 			rigidbody_t& rb1 = rigidbodies[i];
@@ -163,6 +172,7 @@ void update_rigidbodies() {
 		}
 	}
 
+    // actually update position of the rigidbody
 	for (rigidbody_t& rb : rigidbodies) {
 		transform_t& transform = *get_transform(rb.transform_handle);
 		transform.position.y += rb.vel.y * platformer::time_t::delta_time;
@@ -178,5 +188,10 @@ void update_rigidbodies() {
 }
 
 rigidbody_t* get_rigidbody(int rb_handle) {
-	return &rigidbodies[rb_handle];
+    for (rigidbody_t& rb : rigidbodies) {
+        if (rb.handle == rb_handle) {
+            return &rb;
+        }
+    }
+    return NULL;
 }

@@ -5,7 +5,7 @@
 #include "../opengl/object_data.h"
 
 struct rectangle_render_t {
-	// transform_t transform;
+    int handle = -1;
 	int transform_handle = -1;
 	transform_t _internal_transform;
 	glm::vec3 color = glm::vec3(0, 0, 0);
@@ -17,3 +17,4 @@ struct rectangle_render_t {
 
 int create_rectangle_render(int transform_handle, glm::vec3& color, float width, float height, bool wireframe);
 void draw_rectangle_render(const rectangle_render_t& rectangle);
+void draw_rectangle_renders();

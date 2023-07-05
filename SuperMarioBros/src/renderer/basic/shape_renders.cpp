@@ -2,19 +2,32 @@
 #include "utils/conversion.h"
 #include "../renderer.h"
 #include "transform/transform.h"
+#include <vector>
 
 opengl_object_data rectangle_render_t::obj_data{};
 
+static std::vector<rectangle_render_t> rectangles;
+
 int create_rectangle_render(int transform_handle, glm::vec3& color, float width, float height, bool wireframe) {
+    static int running_count = 0;
 	rectangle_render_t rectangle;
 	rectangle.transform_handle = transform_handle;
 	rectangle.width = width;
 	rectangle.height = height;
 	rectangle.color = color;
 	rectangle.wireframe_mode = wireframe;
-	glm::vec2 rec_screen_size = conversion::ndc_size_to_screen_size(glm::vec2(1, 1));
+	glm::vec2 rec_screen_size = conversion::ndc_size_to_window_size(glm::vec2(1, 1));
 	rectangle._internal_transform.scale = glm::vec3(width, height, 1.f);
-	return add_rectangle_to_renderer(rectangle);
+    rectangle.handle = running_count;
+    rectangles.push_back(rectangle);
+    running_count++;
+	return rectangle.handle;
+}
+
+void draw_rectangle_renders() {
+    for (const rectangle_render_t& rectangle : rectangles) {
+		draw_rectangle_render(rectangle);
+	}
 }
 
 void draw_rectangle_render(const rectangle_render_t& rectangle) {

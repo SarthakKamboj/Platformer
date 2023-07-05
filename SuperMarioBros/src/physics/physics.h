@@ -13,6 +13,8 @@ struct aabb_collider_t {
 };
 
 struct rigidbody_t {
+    int handle = -1;
+
 	aabb_collider_t aabb_collider;
 	glm::vec2 vel = glm::vec2(0.f, 0.f);
 	int transform_handle = -1;

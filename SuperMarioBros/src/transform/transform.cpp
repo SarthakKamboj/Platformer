@@ -4,12 +4,15 @@
 std::vector<transform_t> transforms;
 
 int create_transform(glm::vec3 position, glm::vec3 scale, float rot_deg) {
+    static int running_count = 0;
 	transform_t transform;
 	transform.position = position;
 	transform.scale = scale;
 	transform.rotation_deg = rot_deg;
+    transform.handle = running_count;
 	transforms.push_back(transform);
-	return transforms.size() - 1;
+    running_count++;
+	return transform.handle;
 }
 
 glm::mat4 get_model_matrix(const transform_t& transform) {
@@ -22,5 +25,10 @@ glm::mat4 get_model_matrix(const transform_t& transform) {
 }
 
 transform_t* get_transform(int transform_handle) {
-	return &transforms[transform_handle];
+    for (transform_t& transform : transforms) {
+        if (transform.handle == transform_handle) {
+            return &transform;
+        }
+    }
+    return NULL;
 }
