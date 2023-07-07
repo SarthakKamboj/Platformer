@@ -8,6 +8,7 @@ struct world_item_t {
 	int texture_handle = -1;
 	int grid_squares_width = -1;
 	int grid_squares_height = -1;
+    std::string world_item_name;
 
     static int selected_world_item_handle;
     const static int NONE_SELECTED = -1;
@@ -20,7 +21,7 @@ struct placed_world_item_t {
     int rec_render_handle = -1;
 };
 
-int create_world_item(const char* path, int squares_width, int squares_height);
+int create_world_item(const char* path, int squares_width, int squares_height, std::string& name);
 void write_world_items_to_file();
 world_item_t* get_world_item(int world_handle);
 int get_world_item_handle(const char* path, int squares_width, int squares_height);
