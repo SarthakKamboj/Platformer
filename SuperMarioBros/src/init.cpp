@@ -9,7 +9,7 @@
 #include "renderer/opengl/resources.h"
 #include "renderer/opengl/vertex.h"
 #include "renderer/basic/shape_renders.h"
-
+#include <fstream>
 
 SDL_Window* init_sdl() {
 	if (SDL_Init(SDL_INIT_EVERYTHING) != 0) {
@@ -81,9 +81,82 @@ void init_rectangle_data() {
 	shader_set_mat4(data.shader, "projection", projection);
 }
 
+// TODO: remove use of world item handles since those may change with the application
+void init_placed_world_items() {
+    const char* file_path = "C:\\Sarthak\\projects\\Platformer\\Editor\\level1.txt";
+    FILE* file;
+    fopen_s(&file, file_path, "r");
+	size_t delim_len = std::string(WORLD_ITEM_TEXT_FILE_DELIM).size();
+    std::map<int, std::string> idx_to_type;
+    int i = 0;
+    if (file) {
+        bool placed_items_section = false;
+        char line[1024];
+        while (!feof(file)) {
+            memset(line, 0, 1024);
+            fgets(line, 1024, file);
+            if (strcmp(line, "WORLD_ITEMS\n") == 0) continue;
+			if (!placed_items_section && (strcmp(line, "\n") == 0)) continue;
+            if (!placed_items_section && (strcmp(line, "PLACED_ITEMS\n") != 0)) {
+                std::string delim(WORLD_ITEM_TEXT_FILE_DELIM);
+                size_t delim_len = delim.size();
+                static std::string world_item_format = "%1023s " + delim + " %1023s " + delim + " %i " + delim + " %i\n";
+                static const char* world_item_format_char = world_item_format.c_str();
+
+                char name[1024]{};
+                char path[1024]{};
+                int width = 0;
+                int height = 0;
+                sscanf_s(line, world_item_format_char, name, 1023, path, 1023, &width, &height);
+                std::string name_str(name);
+
+                idx_to_type[i] = name_str;
+
+                // int handle = get_world_item_handle(path, width, height);
+                // if (handle == -1) {
+                //     std::string title("prev item");
+                //     idx_to_handle_map[i] = create_world_item(path, width, height, name_str);
+                // } else {
+                //     idx_to_handle_map[i] = handle;
+                // }
+				i++;
+                continue;
+            }
+            if (strcmp(line, "PLACED_ITEMS\n") == 0) {
+                placed_items_section = true;
+                continue;
+            }
+			if ((strcmp(line, "\n") == 0) && placed_items_section) {
+				break;
+			}
+
+            std::string delim(WORLD_ITEM_TEXT_FILE_DELIM);
+            size_t delim_len = delim.size();
+            static std::string placed_item_format = "%i " + delim + " %i " + delim + " %i\n";
+            static const char* placed_item_format_char = placed_item_format.c_str();
+
+            int idx = -1;
+            int x = -1;
+            int y = -1;
+            sscanf_s(line, placed_item_format_char, &idx, &x, &y);
+
+            std::string& type = idx_to_type[idx];
+            if (type == "ground") {
+                glm::vec2 grid_pos(x, y);
+                glm::vec3 pixel_pos((ground_block_t::WIDTH / 2) + ground_block_t::WIDTH * x, (ground_block_t::HEIGHT / 2) + ground_block_t::HEIGHT * y, 0.f);
+                create_ground_block(pixel_pos, glm::vec3(1.f), 0.f);
+            }
+        }
+        fclose(file);
+    } else {
+        std::cout << "could not open world items file" << std::endl;
+    }
+}
+
 void init(application_t& app) {
 	app.window = init_sdl();
 	app.running = true;
     // initialize opengl data for a rectangle
 	init_rectangle_data();
+    init_placed_world_items();
 }

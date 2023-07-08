@@ -10,6 +10,8 @@
 #include "utils/time.h"
 #include "animation/animation.h"
 
+#define BLOCK_DEBUG 0
+
 /*
 Screen coordinates will always being (0,0) in the bottom left and (SCREEN_WIDTH, SCREEN_HEIGHT) in top right
 */
@@ -24,10 +26,12 @@ int main(int argc, char** argv) {
 
 	glm::vec3 rec_color = glm::vec3(0, 1, 1);
 	main_character_t mc = create_main_character(glm::vec3(WINDOW_WIDTH/2, WINDOW_HEIGHT/2, 0.f), glm::vec3(1.f), 0.f, rec_color, glm::vec2(50, 100));
+ 
+ #if BLOCK_DEBUG
 	const int NUM_BLOCKS = 15;
 	ground_block_t blocks[NUM_BLOCKS + 2];
 	for (int i = 0; i < NUM_BLOCKS; i++) {
-		blocks[i] = create_ground_block(glm::vec3((ground_block_t::WIDTH / 2) + ground_block_t::WIDTH * i, 20, 0.f), glm::vec3(1.f), 0.f);
+		// blocks[i] = create_ground_block(glm::vec3((ground_block_t::WIDTH / 2) + ground_block_t::WIDTH * i, 20, 0.f), glm::vec3(1.f), 0.f);
 	}
 	float l_block_x = 150;
 	float block_y = 175;
@@ -37,6 +41,7 @@ int main(int argc, char** argv) {
 	transform_t& transform = *get_transform(blocks[NUM_BLOCKS].transform_handle);
 	int anim_handle = create_animation(&transform.position.y, block_y, block_y * 2, 3.f);
 	start_animation(anim_handle);
+#endif
 
 	// float delta_time = 0.f;
 
