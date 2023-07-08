@@ -83,11 +83,6 @@ void init_rectangle_data() {
 	opengl_object_data& data = rectangle_render_t::obj_data;
 
 	vertex_t vertices[4];
-	// vertices[0] = create_vertex(glm::vec3(0.5f, 0.5f, 0.0f), glm::vec3(0,1,1), glm::vec2(0,1)); // top right
-	// vertices[1] = create_vertex(glm::vec3(0.5f, -0.5f, 0.0f), glm::vec3(0,0,1), glm::vec2(1,1)); // bottom right
-	// vertices[2] = create_vertex(glm::vec3(-0.5f, -0.5f, 0.0f), glm::vec3(0,1,0), glm::vec2(1,0)); // bottom left
-	// vertices[3] = create_vertex(glm::vec3(-0.5f, 0.5f, 0.0f), glm::vec3(1,0,0), glm::vec2(0,0)); // top left
-
     vertices[0] = create_vertex(glm::vec3(0.5f, 0.5f, 0.0f), glm::vec3(0,1,1), glm::vec2(1,1)); // top right
 	vertices[1] = create_vertex(glm::vec3(0.5f, -0.5f, 0.0f), glm::vec3(0,0,1), glm::vec2(1,0)); // bottom right
 	vertices[2] = create_vertex(glm::vec3(-0.5f, -0.5f, 0.0f), glm::vec3(0,1,0), glm::vec2(0,0)); // bottom left
@@ -156,8 +151,6 @@ void init_fbo_draw_data(application_t& app) {
 	shader_set_mat4(data.shader, "model", model_matrix);
 	shader_set_int(data.shader, "fbo_texture", 0);
 }
-
-#if C_FILE_IO
 
 void init_world_items() {
     const char* file_path = "C:\\Sarthak\\projects\\Platformer\\Editor\\world_items.txt";
@@ -251,97 +244,6 @@ void init_placed_world_items() {
         std::cout << "could not open world items file" << std::endl;
     }
 }
-
-#else
-
-void init_world_items() {
-    std::fstream file;
-    file.open("C:\\Sarthak\\projects\\Platformer\\Editor\\world_items.txt");
-	size_t delim_len = std::string(WORLD_ITEM_TEXT_FILE_DELIM).size();
-    if (file.is_open()) {
-        while (!file.eof()) {
-            std::string item_info;
-            std::getline(file, item_info);
-            if (item_info == "") {
-                break;
-            }
-            int start = 0;
-            int first_delim_idx = item_info.find(WORLD_ITEM_TEXT_FILE_DELIM, start);
-            int second_delim_idx = item_info.find(WORLD_ITEM_TEXT_FILE_DELIM, first_delim_idx + 1);
-            std::string path = item_info.substr(start, first_delim_idx);
-            std::string num_width_str = item_info.substr(first_delim_idx + delim_len, 1);
-            std::string num_height_str = item_info.substr(second_delim_idx + delim_len, 1);
-            std::string prev("prev");
-            create_world_item(path.c_str(), std::stoi(num_width_str), std::stoi(num_height_str), prev);
-        }
-        file.close();
-    } else {
-        std::cout << "could not open world items file" << std::endl;
-    }
-}
-
-// TODO: remove use of world item handles since those may change with the application
-void init_placed_world_items() {
-    std::fstream file;
-    file.open("C:\\Sarthak\\projects\\Platformer\\Editor\\level1.txt");
-	size_t delim_len = std::string(WORLD_ITEM_TEXT_FILE_DELIM).size();
-    std::map<int, int> idx_to_handle_map;
-    int i = 0;
-    if (file.is_open()) {
-        bool placed_items_section = false;
-        while (!file.eof()) {
-            std::string item_info;
-            std::getline(file, item_info);
-            if (item_info == "WORLD_ITEMS") continue;
-			if (!placed_items_section && item_info == "") continue;
-            if (!placed_items_section && item_info != "PLACED_ITEMS") {
-                int start = 0;
-                int first_delim_idx = item_info.find(WORLD_ITEM_TEXT_FILE_DELIM, start);
-                int second_delim_idx = item_info.find(WORLD_ITEM_TEXT_FILE_DELIM, first_delim_idx + delim_len);
-                int third_delim_idx = item_info.find(WORLD_ITEM_TEXT_FILE_DELIM, second_delim_idx + delim_len);
-                std::string path = item_info.substr(start, first_delim_idx);
-                std::string num_width_str = item_info.substr(first_delim_idx + delim_len, second_delim_idx - (first_delim_idx + delim_len));
-                std::string num_height_str = item_info.substr(second_delim_idx + delim_len);
-
-                int num_width = std::stoi(num_width_str);
-                int num_height = std::stoi(num_height_str);
-
-                int handle = get_world_item_handle(path.c_str(), num_width, num_height);
-                if (handle == -1) {
-                    std::string title("prev item");
-                    idx_to_handle_map[i] = create_world_item(path.c_str(), num_width, num_height, title);
-                } else {
-                    idx_to_handle_map[i] = handle;
-                }
-				i++;
-                continue;
-            }
-            if (item_info == "PLACED_ITEMS") {
-                placed_items_section = true;
-                continue;
-            }
-			if (item_info == "" && placed_items_section) {
-				break;
-			}
-            int start = 0;
-            int first_delim_idx = item_info.find(WORLD_ITEM_TEXT_FILE_DELIM, start);
-            int second_delim_idx = item_info.find(WORLD_ITEM_TEXT_FILE_DELIM, first_delim_idx + 1);
-            std::string idx_str = item_info.substr(start, first_delim_idx);
-            std::string width_str = item_info.substr(first_delim_idx + delim_len, second_delim_idx - (first_delim_idx + delim_len));
-            std::string height_str = item_info.substr(second_delim_idx + delim_len);
-            
-            int idx = std::stoi(idx_str);
-            int handle = idx_to_handle_map[idx];
-            
-            glm::vec2 grid_pos(std::stoi(width_str), std::stoi(height_str));
-            place_world_item(handle, grid_pos);
-        }
-        file.close();
-    } else {
-        std::cout << "could not open world items file" << std::endl;
-    }
-}
-#endif
 
 void init(application_t& app) {
 	init_sdl(app);
