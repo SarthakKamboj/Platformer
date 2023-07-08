@@ -13,7 +13,9 @@ main_character_t create_main_character(const glm::vec3& pos, const glm::vec3& sc
 void update_main_character(const main_character_t& mc, key_state_t& key_state) {
 	const float vel = WINDOW_WIDTH / 4.f;
 	glm::vec2 delta_pos_vec(0.f, 0.f);
-	rigidbody_t& rb = *get_rigidbody(mc.rigidbody_handle);
+    rigidbody_t* rb_ptr = get_rigidbody(mc.rigidbody_handle);
+    assert(rb_ptr != NULL);
+	rigidbody_t& rb = *rb_ptr;
 	if (key_state.key_being_pressed['w'] || key_state.key_being_pressed[' ']) {
 		rb.vel.y = 2*vel;
 	}

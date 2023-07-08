@@ -1,7 +1,7 @@
 #include "transform.h"
 #include <vector>
 
-std::vector<transform_t> transforms;
+static std::vector<transform_t> transforms;
 
 int create_transform(glm::vec3 position, glm::vec3 scale, float rot_deg) {
     static int running_count = 0;

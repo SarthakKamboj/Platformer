@@ -43,10 +43,7 @@ int main(int argc, char** argv) {
 	start_animation(anim_handle);
 #endif
 
-	// float delta_time = 0.f;
-
 	while (app.running) {
-		// Uint32 start = SDL_GetTicks();
 		float start = platformer::get_time_since_start_in_sec();
 		process_input(mouse_state, key_state, app.window);	
 		if (key_state.close_event_pressed) {
@@ -54,10 +51,8 @@ int main(int argc, char** argv) {
 		}
 		update(key_state, mc);
 		render(app);
-		// Uint32 end = SDL_GetTicks();
 		float end = platformer::get_time_since_start_in_sec();
 		platformer::time_t::delta_time = end - start;
-		// delta_time = (end - start) / 1000.f;
 	}
 	return -1;
 }

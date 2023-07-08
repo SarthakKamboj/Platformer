@@ -2,6 +2,7 @@
 #include "utils/time.h"
 #include <vector>
 #include <iostream>
+#include <cassert>
 
 std::vector<animation_t> animations;
 
@@ -25,6 +26,7 @@ void start_animation(int anim_handle) {
 }
 
 int create_animation(float* value, float start_val, float end_val, float total_time) {
+    assert(value != NULL);
 	animation_t animation;
 	animation.cur = value;
 	animation.start = start_val;

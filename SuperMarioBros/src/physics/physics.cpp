@@ -37,6 +37,7 @@ int create_rigidbody(int transform_handle, bool use_gravity, float collider_widt
 }
 
 void handle_position(rigidbody_t& kinematic_rb, rigidbody_t& non_kinematic_rb, PHYSICS_COLLISION_DIR col_dir) {
+    // already verified at this pt that kin_transform and non_kin_transform both exist
 	transform_t& kin_transform = *get_transform(kinematic_rb.transform_handle);
 	transform_t& non_kin_transform = *get_transform(non_kinematic_rb.transform_handle);
 
@@ -139,8 +140,12 @@ void handle_collision(rigidbody_t& rb1, rigidbody_t& rb2) {
 		rb2.vel.x = 0.f;
 	}
 
-	transform_t& transform1 = *get_transform(rb1.transform_handle);
-	transform_t& transform2 = *get_transform(rb2.transform_handle);
+    transform_t* t1_ptr = get_transform(rb1.transform_handle);
+    transform_t* t2_ptr = get_transform(rb2.transform_handle);
+    assert(t1_ptr != NULL);
+    assert(t2_ptr != NULL);
+	transform_t& transform1 = *t1_ptr;
+	transform_t& transform2 = *t2_ptr;
 
 	if (rb1.is_kinematic != rb2.is_kinematic) {
 		if (rb1.is_kinematic) {
@@ -156,7 +161,9 @@ void update_rigidbodies() {
 
     // apply gravity
 	for (rigidbody_t& rb : rigidbodies) {
-		transform_t& transform = *get_transform(rb.transform_handle);
+        transform_t* ptr = get_transform(rb.transform_handle);
+        assert(ptr != NULL);
+		transform_t& transform = *ptr;
 		if (rb.use_gravity) {
 			rb.vel.y -= GRAVITY * platformer::time_t::delta_time;
 		}
@@ -174,14 +181,18 @@ void update_rigidbodies() {
 
     // actually update position of the rigidbody
 	for (rigidbody_t& rb : rigidbodies) {
-		transform_t& transform = *get_transform(rb.transform_handle);
+        transform_t* ptr = get_transform(rb.transform_handle);
+        assert(ptr != NULL);
+		transform_t& transform = *ptr;
 		transform.position.y += rb.vel.y * platformer::time_t::delta_time;
 		transform.position.x += rb.vel.x * platformer::time_t::delta_time;
 		rb.aabb_collider.x = transform.position.x;
 		rb.aabb_collider.y = transform.position.y;
 
 		// debugging collider
-		transform_t& collider_debug_transform = *get_transform(rb.aabb_collider.collider_debug_transform_handle);
+        transform_t* col_transform_ptr = get_transform(rb.aabb_collider.collider_debug_transform_handle);
+        assert(col_transform_ptr != NULL);
+		transform_t& collider_debug_transform = *col_transform_ptr;
 		collider_debug_transform.position.x = rb.aabb_collider.x;
 		collider_debug_transform.position.y = rb.aabb_collider.y;
 	}	

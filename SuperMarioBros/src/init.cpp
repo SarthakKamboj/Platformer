@@ -9,7 +9,6 @@
 #include "renderer/opengl/resources.h"
 #include "renderer/opengl/vertex.h"
 #include "renderer/basic/shape_renders.h"
-#include <fstream>
 
 SDL_Window* init_sdl() {
 	if (SDL_Init(SDL_INIT_EVERYTHING) != 0) {
@@ -111,14 +110,6 @@ void init_placed_world_items() {
                 std::string name_str(name);
 
                 idx_to_type[i] = name_str;
-
-                // int handle = get_world_item_handle(path, width, height);
-                // if (handle == -1) {
-                //     std::string title("prev item");
-                //     idx_to_handle_map[i] = create_world_item(path, width, height, name_str);
-                // } else {
-                //     idx_to_handle_map[i] = handle;
-                // }
 				i++;
                 continue;
             }
