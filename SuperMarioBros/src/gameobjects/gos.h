@@ -10,6 +10,7 @@ struct main_character_t {
 	int transform_handle = -1;
 	// character currently renders a rectangle, will later change to sprite
 	int rec_render_handle = -1;
+    // rigidbody for the character
 	int rigidbody_handle = -1;
 	glm::vec3 color;
 	glm::vec2 dims;

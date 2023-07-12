@@ -16,7 +16,7 @@ int create_rectangle_render(int transform_handle, glm::vec3& color, float width,
 	rectangle.height = height;
 	rectangle.color = color;
 	rectangle.wireframe_mode = wireframe;
-	glm::vec2 rec_screen_size = conversion::ndc_size_to_window_size(glm::vec2(1, 1));
+    // we scale internally because the original rectangle is 1x1 pixel wide and high
 	rectangle._internal_transform.scale = glm::vec3(width, height, 1.f);
     rectangle.handle = running_count;
     rectangles.push_back(rectangle);
@@ -31,10 +31,17 @@ void draw_rectangle_renders() {
 }
 
 void draw_rectangle_render(const rectangle_render_t& rectangle) {
-	transform_t cur_transform = *get_transform(rectangle.transform_handle);
+    // get the transform for that rectangle render
+    transform_t* transform_ptr = get_transform(rectangle.transform_handle);
+    assert(transform_ptr != NULL);
+	transform_t cur_transform = *transform_ptr;
+    
+    // add the internal offset, especially necessary for scale to make sure width and height are abided by
 	cur_transform.position += rectangle._internal_transform.position;
 	cur_transform.rotation_deg += rectangle._internal_transform.rotation_deg;
 	cur_transform.scale *= rectangle._internal_transform.scale;
+
+    // get model matrix and color and set them in the shader
 	glm::mat4 model_matrix = get_model_matrix(cur_transform);
 	shader_set_mat4(rectangle_render_t::obj_data.shader, "model", model_matrix);
 	shader_set_vec3(rectangle_render_t::obj_data.shader, "rec_color", rectangle.color);
@@ -44,5 +51,6 @@ void draw_rectangle_render(const rectangle_render_t& rectangle) {
 	else {
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	}
+    // draw the rectangle render after setting all shader parameters
 	draw_obj(rectangle_render_t::obj_data);
 }

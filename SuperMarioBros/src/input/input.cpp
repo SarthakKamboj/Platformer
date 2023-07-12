@@ -3,6 +3,7 @@
 
 void process_input(mouse_state_t& mouse_state, key_state_t& key_state, SDL_Window* window) {
 	SDL_Event event;
+    // clear data
 	mouse_state.left_mouse_down = false;
 	mouse_state.left_mouse_up = false;
 	mouse_state.right_mouse_down = false;

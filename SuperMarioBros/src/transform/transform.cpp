@@ -17,6 +17,11 @@ int create_transform(glm::vec3 position, glm::vec3 scale, float rot_deg) {
 
 glm::mat4 get_model_matrix(const transform_t& transform) {
 	glm::mat4 model = glm::mat4(1.0f);
+    /* 
+        we want to scale first, then rotate, then translate in the model space
+        hence the calculation is T * R * S in linear algebra terms, which is
+        why translation is done first in code, then rotation, then scale
+    */
 	model = glm::translate(model, transform.position);
 	model = glm::rotate(model, glm::radians(transform.rotation_deg), glm::vec3(0.f, 0.f, 1.0f));
 	const glm::vec3& scale = transform.scale;

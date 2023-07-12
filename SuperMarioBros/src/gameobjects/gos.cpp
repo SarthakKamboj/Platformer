@@ -11,19 +11,28 @@ main_character_t create_main_character(const glm::vec3& pos, const glm::vec3& sc
 }
 
 void update_main_character(const main_character_t& mc, key_state_t& key_state) {
+    // get velocity
 	const float vel = WINDOW_WIDTH / 4.f;
-	glm::vec2 delta_pos_vec(0.f, 0.f);
+
+    // get rigidbody and make sure its valid
     rigidbody_t* rb_ptr = get_rigidbody(mc.rigidbody_handle);
     assert(rb_ptr != NULL);
 	rigidbody_t& rb = *rb_ptr;
-	if (key_state.key_being_pressed['w'] || key_state.key_being_pressed[' ']) {
+
+    // jump
+    bool jump_btn_pressed = key_state.key_being_pressed['w'] || key_state.key_being_pressed[' '];
+    bool character_falling = rb.vel.y < 0;
+	if (jump_btn_pressed && character_falling) {
 		rb.vel.y = 2*vel;
 	}
 
-	if (key_state.key_being_pressed['a']) {
+    bool left_move_pressed = key_state.key_being_pressed['a'];
+    bool right_move_pressed = key_state.key_being_pressed['d'];
+
+	if (left_move_pressed) {
 		rb.vel.x = -vel;
 	}
-	else if (key_state.key_being_pressed['d']) {
+	else if (right_move_pressed) {
 		rb.vel.x = vel;
 	}
 	else {
